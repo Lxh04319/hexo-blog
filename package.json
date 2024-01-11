@@ -12,6 +12,7 @@
     "version": "7.0.0"
   },
   "dependencies": {
+    "acorn": "^8.11.3",
     "hexo": "^7.0.0",
     "hexo-deployer-git": "github:hexojs/hexo-deployer-git",
     "hexo-generator-archive": "^2.0.0",

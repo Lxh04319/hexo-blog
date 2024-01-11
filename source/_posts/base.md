@@ -1,6 +1,6 @@
 ---
-title: base
-date: 2024-1-10
+title: BASE
+date: 2024-1-11
 tags:
 ---
 
@@ -201,7 +201,7 @@ String rs=sdf.format(d);//日期转换成字符串
 String rs1=sdf.format(time);//时间转换成字符串
 
 //解析
-String a="2024-1-10 20:07";
+String a="2024-1-11 20:07";
 SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd HH:mm");//格式
 Date d1=sdf1.parse(a);//解析 抛出异常
 ```

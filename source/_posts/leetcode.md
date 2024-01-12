@@ -1,7 +1,10 @@
 ---
 title: ALGORITHM
 date: 2024-1-11
-tags:
+categories: # 分类
+- Learn
+tags: # 标签
+- algorithm
 ---
 
 ## 面向Leetcode学习法

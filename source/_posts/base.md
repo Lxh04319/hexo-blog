@@ -263,3 +263,126 @@ LocalTime ld3=ld1.toLocalTime();
 ## 集合框架
 
 ## IO流
+
+### File(操作文本)
+
+#### 一些操作
+
+```java
+File f1=new File("D:\\hexo");//绝对路径
+File f2=new File("javase\\src\\f1.txt");//相对路径
+f1.length();
+f1.exists();
+f1.isFile();
+f1.isDirectory();
+f1.getName();
+long time=f1.lastModified();
+f1.getPath();//获取创建对象时的路径
+f1.getAbsolutePath();//获取绝对路径
+        
+File f3=new File("D:/resource/111.txt");
+f3.createNewFile();
+f3.mkdir();//一级文件夹
+f3.mkdirs();//创建多级文件夹
+f3.delete();//不能删除非空文件夹
+
+//遍历（一级）
+String[] names=f1.list();
+for (String name: names) {}
+File[] files=f1.listFiles();
+for (File file: files) {}
+```
+
+#### 递归
+
+遍历多级文件夹/删除非空文件夹
+
+直接/间接
+
+### IO(读写文本数据)
+
+#### 字符集
+
+· ASCII
+· GBK 汉字2 英文数字1
+· Unicode UTF-8 汉字3 英文数字1
+
+字符集编码``getBytes("GBK")``/解码``new String(bytes1,"GBK")``
+
+#### IO流-字节流 字符流
+
+(抽象类)
+
+· 文件复制
+
+字节输入流 InputStream->FileInputStream
+字节输出流 OutputStream->FileOutputStream
+
+· 读写文本
+字符输入流 Reader->FileReader
+字符输出流 Writer->FileWriter
+
+```java
+InputStream is=new FileInputStream("D:\\hexo");//覆盖
+//后面加true->追加
+int a=is.read();//读取一个字节
+byte[] b=new byte[3];
+String s=new String(b);
+byte[] c=is.readAllBytes();
+is.flush();//刷新流
+is.close();//关闭流
+
+OutputStream os=new FileOutputStream("D:\\hexo");
+os.write('a');
+byte[] bytes="abcd".getBytes();
+os.write(bytes,0,3);
+os.write("\r\n".getBytes());
+os.close();
+```
+
+· 文件复制 输入流--->输出流
+
+#### 释放资源
+
+· try-catch-finally
+· try-with-resource
+
+```java
+try (OutputStream os = new FileOutputStream("D:\\hexo")){
+     byte[] bytes = "abcd".getBytes();
+     os.write(bytes, 0, 3);
+     os.write("\r\n".getBytes());
+}catch(IOException e){
+     e.printStackTrace();
+}
+```
+
+#### IO流-缓冲流 转换流 打印流 数据流 序列化流
+
+· 缓冲流 BufferedInputStream / BufferedOutputStream / BufferedReader``br.readLine()`` / BufferedWriter``bw.newLine()``
+
+包装、提高原始流读写效率
+
+· 转换流 InputStreamReader / OutputStreamWriter
+
+解决不同字符集乱码问题
+
+· 打印流 PrintStream``ps.println() ps.write()`` / PrintWriter
+
+高效打印数据
+
+重定向``System.setOut(ps)``
+
+· 数据流 DataInputStream / DataOutputStream
+
+· 序列化流
+
+#### IO流框架
+
+#### 特殊文件
+
+#### 日志
+
+### 多线程
+
+### 网络通信

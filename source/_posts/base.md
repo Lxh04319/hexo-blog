@@ -528,11 +528,30 @@ lk.unlock();//可采用finally
 ```java
 //public ThreadPoolExecutor(int corePoolSize,int maximumPoolSize,long keepAliveTime,TimeUnit unit,BlockingQueue<Runnable> workQueue,ThreadFactory threadFactory,RejectedExecutionHandler handler)
 ExecutorService pool=new ThreadPoolExecutor(1,2,3,TimeUnit.SECONDS,new ArrayBlockingQueue<>(3),Executors.defaultThreadFactory(),new ThreadPoolExecutor.AbortPolicy());
+
+//处理Runnable任务
+Runnable t=new newRunnable();
+pool.execute(t);
+pool.shutdown();
+
+//处理Callable任务
+Future<Object> f=pool.submit(new newCallable());
 ```
 
-2.Executors
+2.Executors(不使用 有弊端)
 
-#### 并发
+```java
+//底层基于ExecutorService实现
+ExecutorService pool=Executors.newCachedThreadPool(3);
+```
+
+#### 并发 并行 生命周期
+
+CPU轮询
+
+#### 乐观锁
+
+线程安全+同时执行
 
 ### 网络通信
 

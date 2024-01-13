@@ -491,4 +491,49 @@ Object ob=fu.get();//获取结果
 
 #### 线程安全
 
+##### 线程同步
+
+解决线程安全问题
+
+加锁
+
+```java
+//1.同步代码块
+synchronized(this)//共享资源
+
+//2.同步方法
+public synchronized 返回值 方法名
+//实例方法：this 静态方法：类名.class
+
+//3.Lock锁 采用其实例类ReentrantLock创建对象
+Lock lk=new ReentrantLock();
+lk.lock();
+lk.unlock();//可采用finally
+```
+
+##### 线程通信
+
+各线程间告知状态
+· this.wait()
+· this.notifyAll() 
+
+#### 线程池
+
+复用线程
+
+##### 创建线程池 接口ExecutorService
+
+1.ExecutorService实现类ThreadPoolExecutor
+
+```java
+//public ThreadPoolExecutor(int corePoolSize,int maximumPoolSize,long keepAliveTime,TimeUnit unit,BlockingQueue<Runnable> workQueue,ThreadFactory threadFactory,RejectedExecutionHandler handler)
+ExecutorService pool=new ThreadPoolExecutor(1,2,3,TimeUnit.SECONDS,new ArrayBlockingQueue<>(3),Executors.defaultThreadFactory(),new ThreadPoolExecutor.AbortPolicy());
+```
+
+2.Executors
+
+#### 并发
+
 ### 网络通信
+
+#### TCP通信

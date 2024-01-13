@@ -373,15 +373,87 @@ try (OutputStream os = new FileOutputStream("D:\\hexo")){
 
 重定向``System.setOut(ps)``
 
-· 数据流 DataInputStream / DataOutputStream
+· 数据流 DataInputStream``dis.writeUTF()`` / DataOutputStream``dos.writeUTF()``
 
-· 序列化流
+传入数据和数据类型
 
-#### IO流框架
+· 序列化流 ObjectInputStream``oos.writeObject()`` / ObjectOutputStream``oos.readObject()``
+
+序列化接口``implements Serializable``
+
+成员变量前加上``transient``不参与序列化
+
+序列化多个对象： ``ArrayList`` 已实现序列化接口
+
+#### IO框架
+
+封装对文件、数据进行操作的代码
+
+Commons-io 框架
+
+```java
+//导入框架 融合
+FileUtils.copyDirectory(new File("D:\\hexo"),new File("D:\\CodeField"));//cpoyFile()
+FileUtils.deleteDirectory(new File("D:\\aa"));
+```
 
 #### 特殊文件
 
+##### Properties属性文件
+
+本质->map
+
+```java
+Properties properties=new Properties();
+properties.load(new FileReader("D:\\hexo\\sources"));
+properties.getProperty("key");
+properties.setProperty("key","value");
+properties.store(new FileWriter("D:\\hexo\\sources"),"save");
+```
+
+##### XML文件
+
+本质->数据格式
+
+``<tags>`` 做系统的配置文件 / 特殊数据结构网络传输
+
+Dom4j->解析XML框架
+
+```java
+//解析
+SAXReader saxReader=new SAXReader();
+Document document=saxReader.read("path");
+Element root=document.getRootElement();
+//存入拼接成XML----io流
+```
+
+约束XML书写---限制格式
+
 #### 日志
+
+记录运行过程中的信息
+
+Logback框架
+
+```java
+//slf4j-api: 日志接口
+//logback-core: 基础模块
+//logback-classic: 实现slf4j API
+//logback-access: http访问
+//logback.xml---src下 配置
+Logger LOGGER=LoggerFactory.getLogger("Test");
+LOGGER.info("start");
+LOGGER.debug("a"+a);
+```
+
+设置日志级别
+
+```java
+(trace) debug //最低级别
+info 输出
+warn
+error
+```
 
 ### 多线程
 

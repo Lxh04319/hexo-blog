@@ -457,4 +457,38 @@ error
 
 ### 多线程
 
+#### 创建多线程
+
+```java
+//1.继承Thread
+Thread t=new newThread();
+//子类继承Thread 重写run方法
+//@Override
+//public void run() {
+//   System.out.println("new");
+//}
+t.start();//自动执行run
+System.out.println("main");
+
+//2.Runnable接口
+Runnable t=new newRunnable();//子类实现Runnable接口 封装成Thread线程对象
+new Thread(t).start();//也可以通过匿名内部类 使用Lambda简化
+
+//3.Callable接口 可返回执行结果
+Callable<Object> ca=new newCallable(10);
+FutureTask<Object> fu=new FutureTask<>(ca);//未来任务对象
+new Thread(fu).start();
+Object ob=fu.get();//获取结果
+```
+
+#### Thread常用方法
+
+· run()  start()
+· currentThread()
+· getName() setName() //构造器直接写
+· sleep()
+· join() //当前线程先执行完
+
+#### 线程安全
+
 ### 网络通信

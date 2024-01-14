@@ -5,7 +5,10 @@ categories: # 分类
 - Learn
 tags: # 标签
 - algorithm
-description: * 写在前面...
+description: 写在前面...
+
+---
+
 * 面向leetcode学习
 * 本质上来说是第一次从头开始学算法 :-(
 * 仅为了记录学习过程和各个题型之间需要注意的点
@@ -13,8 +16,6 @@ description: * 写在前面...
 * 全面学完了就不记录刷题了(期待着那一天...)
 * 因为我真的很懒，也是个大笨蛋捏
 * algorithm is so difficult...
----
-
 
 ### 数组
 

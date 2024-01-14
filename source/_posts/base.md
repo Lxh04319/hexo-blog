@@ -303,9 +303,9 @@ for (File file: files) {}
 
 #### 字符集
 
-· ASCII
-· GBK 汉字2 英文数字1
-· Unicode UTF-8 汉字3 英文数字1
+* ASCII
+* GBK 汉字2 英文数字1
+* Unicode UTF-8 汉字3 英文数字1
 
 字符集编码``getBytes("GBK")``/解码``new String(bytes1,"GBK")``
 
@@ -313,14 +313,13 @@ for (File file: files) {}
 
 (抽象类)
 
-· 文件复制
+* 文件复制
+  字节输入流 InputStream->FileInputStream
+  字节输出流 OutputStream->FileOutputStream
 
-字节输入流 InputStream->FileInputStream
-字节输出流 OutputStream->FileOutputStream
-
-· 读写文本
-字符输入流 Reader->FileReader
-字符输出流 Writer->FileWriter
+* 读写文本
+  字符输入流 Reader->FileReader
+  字符输出流 Writer->FileWriter
 
 ```java
 InputStream is=new FileInputStream("D:\\hexo");//覆盖
@@ -340,12 +339,12 @@ os.write("\r\n".getBytes());
 os.close();
 ```
 
-· 文件复制 输入流--->输出流
+* 文件复制 输入流--->输出流
 
 #### 释放资源
 
-· try-catch-finally
-· try-with-resource
+* try-catch-finally
+* try-with-resource
 
 ```java
 try (OutputStream os = new FileOutputStream("D:\\hexo")){
@@ -359,30 +358,23 @@ try (OutputStream os = new FileOutputStream("D:\\hexo")){
 
 #### IO流-缓冲流 转换流 打印流 数据流 序列化流
 
-· 缓冲流 BufferedInputStream / BufferedOutputStream / BufferedReader``br.readLine()`` / BufferedWriter``bw.newLine()``
+* 缓冲流 BufferedInputStream / BufferedOutputStream / BufferedReader``br.readLine()`` / BufferedWriter``bw.newLine()``
+  包装、提高原始流读写效率
 
-包装、提高原始流读写效率
+* 转换流 InputStreamReader / OutputStreamWriter
+  解决不同字符集乱码问题
 
-· 转换流 InputStreamReader / OutputStreamWriter
-
-解决不同字符集乱码问题
-
-· 打印流 PrintStream``ps.println() ps.write()`` / PrintWriter
-
-高效打印数据
+* 打印流 PrintStream``ps.println() ps.write()`` / PrintWriter
+  高效打印数据
 
 重定向``System.setOut(ps)``
 
-· 数据流 DataInputStream``dis.writeUTF()`` / DataOutputStream``dos.writeUTF()``
+* 数据流 DataInputStream``dis.writeUTF()`` / DataOutputStream``dos.writeUTF()``
+  传入数据和数据类型
 
-传入数据和数据类型
-
-· 序列化流 ObjectInputStream``oos.writeObject()`` / ObjectOutputStream``oos.readObject()``
-
+* 序列化流 ObjectInputStream``oos.writeObject()`` / ObjectOutputStream``oos.readObject()``
 序列化接口``implements Serializable``
-
 成员变量前加上``transient``不参与序列化
-
 序列化多个对象： ``ArrayList`` 已实现序列化接口
 
 #### IO框架
@@ -483,11 +475,11 @@ Object ob=fu.get();//获取结果
 
 #### Thread常用方法
 
-· run()  start()
-· currentThread()
-· getName() setName() //构造器直接写
-· sleep()
-· join() //当前线程先执行完
+* run()  start()
+* currentThread()
+* getName() setName() //构造器直接写
+* sleep()
+* join() //当前线程先执行完
 
 #### 线程安全
 
@@ -514,8 +506,9 @@ lk.unlock();//可采用finally
 ##### 线程通信
 
 各线程间告知状态
-· this.wait()
-· this.notifyAll() 
+
+* this.wait()
+* this.notifyAll() 
 
 #### 线程池
 
@@ -555,4 +548,27 @@ CPU轮询
 
 ### 网络通信
 
+基本的通信架构 CS/BS
+
+* IP地址
+  公网/局域网/特殊IP
+  InetAddress类 ``InetAddress.getLocalHost(); InetAddress.getByName(); InetAddress.isReachable();``
+
+* 端口号
+  周知/注册/动态
+
+* 协议
+  OSI TCP/IP
+  传输层：UDP(效率高)/TCP(可靠) -->三次握手连接 四次挥手断开
+
+#### UDP通信
+
+无连接，不可靠，发送数据包
+
+DatagramSocket类
+
 #### TCP通信
+
+面向连接，可靠通信，三次握手
+
+Socket类

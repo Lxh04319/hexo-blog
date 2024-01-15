@@ -5,7 +5,7 @@ categories:
   - Learn
 tags:
   - algorithm
-description: so difficult
+description: algorithm is so difficult
 abbrlink: 2
 ---
 

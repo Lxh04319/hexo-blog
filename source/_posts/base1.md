@@ -5,7 +5,8 @@ tags:
   - java
 description: i don't know why !
 abbrlink: f62113d5
-categories:
+categories: 
+  - Learn
 ---
 
 ### 基础语法

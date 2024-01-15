@@ -1,11 +1,10 @@
 ---
-title: BASE1
+title: BASE
 date: 2024-1-11
-categories: # 分类
-- Learn
-tags: # 标签
+categories:
+tags: 
 - java
-description: 没想好写什么
+description:  没想好写什么
 ---
 
 ## 基础语法

@@ -1,11 +1,12 @@
 ---
 title: ALGORITHM
 date: 2024-1-11
-categories: 
-- Learn
-tags: 
-- algorithm
-description:  so difficult
+categories:
+  - Learn
+tags:
+  - algorithm
+description: so difficult
+abbrlink: d1c7d256
 ---
 
 ### 写在前面...

@@ -1,10 +1,11 @@
 ---
 title: My New Post
+categories:
+  - Test
+tags:
+  - test
+abbrlink: 177574ba
 date: 2023-12-23 23:06:22
-categories: # 分类
-- Test
-tags: # 标签
-- test
 ---
 
 ## 测试

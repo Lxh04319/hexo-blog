@@ -1,10 +1,11 @@
 ---
 title: BASE
 date: 2024-1-11
+tags:
+  - java
+description: i don't know why !
+abbrlink: f62113d5
 categories:
-tags: 
-- java
-description:  i don't know why !
 ---
 
 ### 基础语法

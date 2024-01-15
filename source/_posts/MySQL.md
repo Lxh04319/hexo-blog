@@ -1,5 +1,5 @@
 ---
-title: AMySQL
+title: MySQL
 date: 2024-1-15
 categories: 
 - Learn

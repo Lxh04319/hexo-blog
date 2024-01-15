@@ -4,7 +4,7 @@ date: 2024-1-11
 tags:
   - java
 description: i don't know why !
-abbrlink: f62113d5
+abbrlink: 1
 categories: 
   - Learn
 ---

@@ -6,7 +6,7 @@ categories:
 tags:
   - algorithm
 description: so difficult
-abbrlink: d1c7d256
+abbrlink: 2
 ---
 
 ### 写在前面...

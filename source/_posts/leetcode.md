@@ -304,3 +304,74 @@ class Solution {//上一题的加强版
 }
 ```
 
+#### 模拟
+
+##### [59.螺旋矩阵||](https://leetcode.cn/problems/spiral-matrix-ii/description/)
+
+题目描述：
+给你一个正整数 n ，生成一个包含 1 到 n2 所有元素，且元素按顺时针顺序螺旋排列的 n x n 正方形矩阵 matrix 。
+
+```java
+class Solution {
+    public int[][] generateMatrix(int n) {
+        int k=1;
+        int o=0;
+        int[][] res=new int[n][n];
+        int len=0;
+        int i;
+        while(len++<n/2){
+            for(i=o;i<n-len;i++) res[o][i]=k++;
+            for(i=o;i<n-len;i++) res[i][n-len]=k++;    
+            for(i=n-len;i>=len;i--) res[n-len][i]=k++;
+            for(i=n-len;i>=len;i--) res[i][len-1]=k++;
+            //len++;
+            o++;
+        }
+        if(n%2==1){
+            res[o][o]=k;
+        }
+        return res;
+    }
+}
+```
+
+##### [54.螺旋矩阵](https://leetcode.cn/problems/spiral-matrix/description/)
+
+题目描述：给你一个 m 行 n 列的矩阵 matrix ，请按照 顺时针螺旋顺序 ，返回矩阵中的所有元素。
+
+```java
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> res=new ArrayList<>();
+        int i,o=0,len=0;
+        int m=matrix.length;
+        int n=matrix[0].length;
+        int t=Math.min(m,n);
+        while(len++<t/2){
+            for(i=o;i<n-len;i++) res.add(matrix[o][i]);
+            for(i=o;i<m-len;i++) res.add(matrix[i][n-len]);
+            for(i=n-len;i>=len;i--) res.add(matrix[m-len][i]);
+            for(i=m-len;i>=len;i--) res.add(matrix[i][len-1]);
+            o++;
+        } 
+        if(t%2==1){
+            if(t==m){
+                for(i=o;i<=n-len;i++) res.add(matrix[o][i]);
+            }
+            else for(i=o;i<=m-len;i++) res.add(matrix[i][o]);
+        }
+        return res;
+    }
+}
+```
+
+#### [LCR 146.螺旋遍历二维数组](https://leetcode.cn/problems/shun-shi-zhen-da-yin-ju-zhen-lcof/description/)
+
+与上一题的区别：m.n可能为0 需添加判断
+
+```java
+if(array==null||array.length==0||array[0].length==0){
+            return new int[0];
+}
+```
+

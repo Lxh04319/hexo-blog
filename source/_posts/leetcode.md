@@ -365,7 +365,7 @@ class Solution {
 }
 ```
 
-#### [LCR 146.螺旋遍历二维数组](https://leetcode.cn/problems/shun-shi-zhen-da-yin-ju-zhen-lcof/description/)
+##### [LCR 146.螺旋遍历二维数组](https://leetcode.cn/problems/shun-shi-zhen-da-yin-ju-zhen-lcof/description/)
 
 与上一题的区别：m.n可能为0 需添加判断
 

@@ -11,27 +11,29 @@ categories:
 
 ## Web前端开发
 
+### 前端技术
+
 Web标准：
 
 * HTML
 * CSS
 * JavaScript
   
-### HTML CSS
+#### HTML CSS
 
-#### HTML
+##### HTML
 
 * 控制页面结构
 * 超文本标记语言
 
-#### CSS
+##### CSS
 
 * 控制页面样式
 * 层叠样式表
   
-#### 基础标签和样式
+##### 基础标签和样式
 
-##### 基础标签
+###### 基础标签
 
 * ``<img>``图片标签
 
@@ -62,7 +64,7 @@ Web标准：
   * ``<input>``  type
   ``<select>`` ``<textarea>``
 
-##### CSS样式
+###### CSS样式
 
 引入CSS(行内/内嵌(写在head里)/外联)
 
@@ -89,7 +91,7 @@ CSS选择器
   ``border``边框
   ``margin``外边距上右下左
 
-### JS
+#### JS
 
 外部脚本 ``<script src="#path"></script>``(不能采取自闭合)
 
@@ -110,7 +112,7 @@ CSS选择器
   ``function name(a,b)`` 无需参数和返回类型
 * JS对象
 
-#### JS对象
+##### JS对象
 
 * 基础对象
   * Array 
@@ -140,7 +142,7 @@ CSS选择器
   * Text 文本
   * Comment 注释
 
-#### JS事件
+##### JS事件
 
 事件绑定
 
@@ -163,8 +165,135 @@ CSS选择器
   onmouseout();
 ```
 
-### Vue
+### 异步交页Ajax
 
+异步的JavaScript和XML
+数据交换--异步交互
+
+Axios 封装原生Ajax
+
+### 前端开发框架
+
+#### Vue
+
+基于MVVM模型的js框架
 免除原生JavaScript中DOM操作 数据双向绑定
 
-#### 指令
+```JavaScript
+<script>
+  new Vue({
+    el:"#id",
+    data:{
+      url:"path"
+    },
+    method:{
+      a1:function(){}
+    }
+  })
+<script>
+```
+
+##### 指令
+
+```JavaScript
+v-bind 绑定HTML标签属性值 设置href css等
+v-model 表单上创建双向数据绑定
+v-on 为HTML标签绑定事件
+v-if 条件渲染
+v-else-if
+v-else
+v-show 条件展示
+v-for 列表渲染
+```
+
+##### 生命周期
+
+八个阶段
+
+```JavaScript
+mounted 挂载完成--Vue初始化完成，HTML页面渲染成功--发送请求到服务端 加载数据
+```
+
+##### 前端工程化
+
+* YApi--api管理平台
+* 环境 vue-cli 脚手架
+  依赖环境 nodejs
+
+#### 组件库Element
+
+官方文档cv
+
+* Table
+* Pagination 分页
+* Dialog
+* Form
+
+##### vue路由
+
+url中的hash与组件间的对应关系
+Vue Router
+
+##### 打包部署
+
+* build 打包
+* Nginx 部署 dist-->nginx/html
+
+```JavaScript
+<router-link>
+<router-view>
+```
+
+## Web后端开发
+
+### 项目构建--Maven
+
+* 安装配置(略)
+* IDEA集成Maven 配置--创建--导入
+  
+#### 依赖管理
+
+##### 依赖配置
+
+```java
+<dependency></dependency>
+```
+
+##### 依赖传递
+
+依赖有传递性
+
+```java
+//断开指定依赖
+<exclusions></exclusions>
+```
+
+##### 依赖范围
+
+```java
+//控制依赖作用范围
+<scope></scope>
+//scope值
+compile   主程序 测试 打包 ---log4j
+test             测试     ---junit
+provided  主程序 测试      ---servlet-api
+runtime          测试 打包 ---jdbc
+```
+
+##### 生命周期
+
+* clean
+* default
+  * compile
+  * test
+  * package
+  * install
+* site
+  
+### Web
+
+#### SpringBootWeb
+
+#### HTTP协议
+
+#### Tomcat

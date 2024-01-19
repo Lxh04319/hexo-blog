@@ -19,6 +19,8 @@ abbrlink: 2
 * 因为我真的很懒，也是个大笨蛋捏
 * algorithm is so difficult...
 
+---
+
 ### 数组
 
 #### 二分查找
@@ -375,4 +377,321 @@ if(array==null||array.length==0||array[0].length==0){
 }
 ```
 
+---
+
 ### 链表
+
+#### [203.移除链表元素](https://leetcode.cn/problems/remove-linked-list-elements/description/)
+
+题目描述：
+给你一个链表的头节点 head 和一个整数 val ，请你删除链表中所有满足 Node.val == val 的节点，并返回 新的头节点 。
+
+```java
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        //if(head==null) return head;
+        while(head!=null&&head.val==val){
+            head=head.next;
+        }
+        if(head==null) return head;
+        ListNode p=head;
+        ListNode t=head.next;
+        while(t!=null){
+            if(t.val==val){
+                p.next=t.next;
+            }
+            else {
+                p=p.next;
+            }
+            t=t.next;
+        }
+        return head;
+    }
+}
+```
+
+#### [206.反转链表](https://leetcode.cn/problems/reverse-linked-list/description/)
+
+题目描述：
+给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。
+
+```java
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        //if(head==null) return head;
+        ListNode p=null,t=head,nextt=null;
+        while(t!=null){
+            nextt=t.next;
+            t.next=p;
+            p=t;
+            t=nextt;
+        }
+        return p;
+    }
+}
+```
+
+#### [92.反转链表||](https://leetcode.cn/problems/reverse-linked-list-ii/description/)
+
+题目描述：
+给你单链表的头指针 head 和两个整数 left 和 right ，其中 left <= right 。请你反转从位置 left 到位置 right 的链表节点，返回 反转后的链表 。
+
+```java
+class Solution {
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        ListNode dummyhead=new ListNode(0);
+        dummyhead.next=head;
+        ListNode l=dummyhead,r=head;
+        //ListNode temp=null;
+        for(int i=1;i<left;i++){
+            l=l.next;
+            r=r.next;
+        }
+        for(int i=1;i<=right-left;i++){
+            ListNode temp=r.next;
+            r.next=r.next.next;
+            //l=r;
+            temp.next=l.next;
+            l.next=temp;
+            //r=temp;
+        }
+        return dummyhead.next;
+    }
+}
+```
+
+#### [707.设计链表](https://leetcode.cn/problems/design-linked-list/description/)
+
+题目描述：
+你可以选择使用单链表或者双链表，设计并实现自己的链表。
+单链表中的节点应该具备两个属性：val 和 next 。val 是当前节点的值，next 是指向下一个节点的指针/引用。
+如果是双向链表，则还需要属性 prev 以指示链表中的上一个节点。假设链表中的所有节点下标从 0 开始。
+实现 MyLinkedList 类：
+MyLinkedList() 初始化 MyLinkedList 对象。
+int get(int index) 获取链表中下标为 index 的节点的值。如果下标无效，则返回 -1 。
+void addAtHead(int val) 将一个值为 val 的节点插入到链表中第一个元素之前。在插入完成后，新节点会成为链表的第一个节点。
+void addAtTail(int val) 将一个值为 val 的节点追加到链表中作为链表的最后一个元素。
+void addAtIndex(int index, int val) 将一个值为 val 的节点插入到链表中下标为 index 的节点之前。如果 index 等于链表的长度，那么该节点会被追加到链表的末尾。如果 index 比长度更大，该节点将 不会插入 到链表中。
+void deleteAtIndex(int index) 如果下标有效，则删除链表中下标为 index 的节点。
+
+```java
+class listnode{
+    int val;
+    listnode next;
+    listnode(){}
+    listnode(int val){
+        this.val=val;
+    }
+}
+class MyLinkedList {
+    listnode head;
+    int size;
+    public MyLinkedList() {
+        size=0;
+        head=new listnode(0);
+    }
+    
+    public int get(int index) {
+        if(index>=size||index<0){
+            return -1;
+        }
+        listnode p=head;
+        for(int i=0;i<=index;i++){
+            p=p.next;
+        }
+        return p.val;
+    }
+    
+    public void addAtHead(int val) {
+        listnode add=new listnode(val);
+        add.next=head.next;
+        head.next=add;
+        size++;
+    }
+    
+    public void addAtTail(int val) {
+        listnode temp=new listnode(val);
+        listnode p=head;
+        for(int i=0;i<size;i++){
+            p=p.next;
+        }
+        p.next=temp;
+        size++;
+    }
+    
+    public void addAtIndex(int index, int val) {
+        if(index>size) return;
+        listnode temp=new listnode(val);
+        listnode p=head;
+        for(int i=0;i<index;i++){
+            p=p.next;
+        }
+        temp.next=p.next;
+        p.next=temp;
+        size++;
+    }
+    
+    public void deleteAtIndex(int index) {
+        if(index>=size) return;
+        listnode p=head;
+        for(int i=0;i<index;i++){
+            p=p.next;
+        }
+        p.next=p.next.next;
+        size--;
+    }
+}
+```
+
+#### [24.两两交换链表中的节点](https://leetcode.cn/problems/swap-nodes-in-pairs/description/)
+
+题目描述：
+给你一个链表，两两交换其中相邻的节点，并返回交换后链表的头节点。你必须在不修改节点内部的值的情况下完成本题（即，只能进行节点交换）。
+
+```java
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        ListNode dummy=new ListNode(-1);
+        dummy.next=head;
+        ListNode pre=dummy;
+        ListNode first,second;
+        while(pre.next!=null&&pre.next.next!=null){
+            first=pre.next;
+            second=first.next;
+            pre.next=second;
+            first.next=second.next;
+            second.next=first;
+            pre=first;
+        }
+        return dummy.next;
+    }
+}
+```
+
+#### [19.删除链表的倒数第N个结点](https://leetcode.cn/problems/remove-nth-node-from-end-of-list/description/)
+
+题目描述：
+给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。
+
+```java
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummy=new ListNode(-1);
+        dummy.next=head;
+        ListNode fast=dummy,slow=dummy;
+        for(int i=0;i<n;i++){
+            fast=fast.next;
+        }
+        while(fast.next!=null){
+            fast=fast.next;
+            slow=slow.next;
+        }
+        slow.next=slow.next.next;
+        return dummy.next;
+    }
+}
+```
+
+#### [141.环形链表](https://leetcode.cn/problems/linked-list-cycle/description/)
+
+题目描述：
+给你一个链表的头节点 head ，判断链表中是否有环。
+如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。注意：pos 不作为参数进行传递 。仅仅是为了标识链表的实际情况。
+如果链表中存在环 ，则返回 true 。 否则，返回 false 。
+
+```java
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        ListNode fast=head,slow=head;
+        while(fast!=null&&fast.next!=null){
+            slow=slow.next;
+            fast=fast.next.next;
+            if(fast==slow){
+                //circle
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+#### [142.环形链表||](https://leetcode.cn/problems/linked-list-cycle-ii/description/)
+
+题目描述：
+给定一个链表的头节点  head ，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+不允许修改 链表。
+
+```java
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode fast=head,slow=head;
+        while(fast!=null&&fast.next!=null){
+            slow=slow.next;
+            fast=fast.next.next;
+            if(slow==fast){
+                //have circle
+                ListNode p=head;
+                while(fast!=p){
+                    fast=fast.next;
+                    p=p.next;
+                }
+                return p;
+            }
+        }
+        return null;
+    }
+}
+```
+
+#### [160.相交链表](https://leetcode.cn/problems/intersection-of-two-linked-lists/description/)
+
+题目描述：
+给你两个单链表的头节点 headA 和 headB ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 null 。
+
+```java
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode a=headA,b=headB;
+        int lena=0,lenb=0;
+        while(a!=null){
+            lena++;
+            a=a.next;
+        }
+        while(b!=null){
+            lenb++;
+            b=b.next;
+        }
+        int dif=Math.abs(lena-lenb);
+        a=headA;
+        b=headB;
+        if(lena>lenb){
+            for(int i=0;i<dif;i++) a=a.next;
+        }
+        else for(int i=0;i<dif;i++) b=b.next;
+        while(a!=null&&b!=null){
+            if(a==b) return a;
+            a=a.next;
+            b=b.next;
+        }
+        return null;
+    }
+}
+```
+
+```java
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode a=headA,b=headB;
+        //strange method
+        while(a!=b){
+            if(a==null) a=headB;
+            else a=a.next;
+            if(b==null) b=headA;        
+            else b=b.next;
+        }
+        return a;
+    }
+}
+```

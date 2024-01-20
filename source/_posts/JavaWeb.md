@@ -296,6 +296,98 @@ runtime          测试 打包 ---jdbc
 
 #### SpringBootWeb
 
+```java
+//端口号8080可能会被占用
+Application.java-->server.port=8015
+```
+
 #### HTTP协议
 
-#### Tomcat
+* 基于TCP协议
+* 请求-响应模型
+* 无状态协议--请求间不能共享，但速度快
+
+##### 请求协议
+
+请求数据格式
+
+* 请求行
+  * 请求方式 资源路径 协议及版本
+  * 请求方式：
+  * GET:请求参数在请求行，无请求体，有大小限制
+  * POST:请求参数在请求体，无大小限制
+* 请求头
+  * 常见请求头
+  * Host 
+  * User-Agent 浏览器版本
+  * Accept 浏览器能接收的资源类型
+  * Accept-Language 
+  * Accept-Encoding 浏览器支持的压缩类型
+  * Content-Type 请求主体的数据类型
+  * Content-Length
+* 请求体
+
+##### 响应协议
+
+响应格式
+
+* 响应行
+  * 协议 状态码 描述
+  * 响应状态码：
+  * 1xx 响应中
+  * 2xx 成功
+  * 3xx 重定向
+  * 4xx 客户端错误
+  * 5xx 服务器错误
+  * ![Alt text](image.png)
+* 响应头
+  * Content-Type 相应内容类型
+  * Content-Length
+  * Content-Encoding 响应压缩算法
+  * Cache-Control 客户端应如何缓存
+  * Set-Cookie 所在域设置Cookie
+* 响应体
+
+##### 协议解析
+
+繁琐--封装 使用Web服务器
+
+##### Tomcat(略)
+
+SpringBoot已内嵌依赖
+
+#### 请求响应
+
+##### 请求
+
+接口测试--postman Apipost
+
+参数
+
+* 简单参数
+  * SpringBoot接收参数
+  * 名不一致 手动映射--@RequestParam注释(必须传递参数)
+* 实体参数--封装实体类
+* 数组集合参数
+  * 如前端传回的checkbox 多个参数
+  * 数组 ``Array.toString(String[])`` 默认封装到数组
+  * 集合 ``@RequestParam List<String>``
+* 日期参数
+  * 日期参数格式化``@DateTimeFormat(pattern="yyyy-MM-dd") LocalDateTime time)``
+* JSON参数
+  * 将其封装为实体类 注解``@RequestBody``
+* 路径参数
+  * 请求路径参数``@RequestMapping("/path/{id}")``
+  * 接收路径参数``@PathVariable Integer id``
+  
+##### 响应
+
+* ``ResponseBody`` 方法返回值直接响应(实体类/集合-->JSON)
+``RestController``
+
+* 统一响应结果(返回类型)--封装 ``Result(code,msg,data)``
+  全部转为JSON格式数据
+
+##### 分层解耦
+
+### MySQL

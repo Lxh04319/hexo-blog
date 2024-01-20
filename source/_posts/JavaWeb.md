@@ -390,4 +390,14 @@ SpringBoot已内嵌依赖
 
 ##### 分层解耦
 
+* 三层架构 控制层controller--逻辑处理service--数据访问dao
+* 分层解耦
+  * 高内聚低耦合
+  * 解耦合
+    * 控制反转 IOC
+    * 依赖注入 DI
+    * Bean对象
+* IOC
+* DI
+
 ### MySQL

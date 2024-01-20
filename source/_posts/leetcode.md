@@ -695,3 +695,114 @@ public class Solution {
     }
 }
 ```
+
+### 哈希表
+
+#### [242.有效的字母异位词](https://leetcode.cn/problems/valid-anagram/description/)
+
+题目描述：
+给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。
+注意：若 s 和 t 中每个字符出现的次数都相同，则称 s 和 t 互为字母异位词。
+
+```java
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        int[] hash=new int[26];
+        for(int i=0;i<s.length();i++){
+            hash[s.charAt(i)-'a']++;
+        }
+        for(int i=0;i<t.length();i++){
+            hash[t.charAt(i)-'a']--;
+        }
+        for(int num:hash){
+            if(num!=0) return false;
+        }
+        return true;
+    }
+}
+```
+
+#### [383.赎金信](https://leetcode.cn/problems/ransom-note/description/)
+
+题目描述：
+给你两个字符串：ransomNote 和 magazine ，判断 ransomNote 能不能由 magazine 里面的字符构成。
+如果可以，返回 true ；否则返回 false 。
+magazine 中的每个字符只能在 ransomNote 中使用一次。
+
+```java
+class Solution {
+    public boolean canConstruct(String ransomNote, String magazine) {
+        int[] hash=new int[26];
+        for(int i=0;i<magazine.length();i++){
+            hash[magazine.charAt(i)-'a']++;
+        }
+        for(int i=0;i<ransomNote.length();i++){
+            if(hash[ransomNote.charAt(i)-'a']!=0){
+                hash[ransomNote.charAt(i)-'a']--;
+            }
+            else return false;
+        }
+        return true;
+    }
+}
+```
+
+#### [49.字母异位词分组](https://leetcode.cn/problems/group-anagrams/description/)
+
+题目描述：
+给你一个字符串数组，请你将 字母异位词 组合在一起。可以按任意顺序返回结果列表。
+字母异位词 是由重新排列源单词的所有字母得到的一个新单词。
+
+```java
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String,List<String>> map=new HashMap<String,List<String>>();
+        for(String s:strs){
+            char[] chr=s.toCharArray();
+            Arrays.sort(chr);
+            String news=new String(chr);
+            List<String> l=map.getOrDefault(news,new ArrayList());
+            l.add(s);
+            map.put(news,l);
+        }
+        return new ArrayList<List<String>>(map.values());
+    }
+}
+```
+
+#### [438.找到字符串中的所有字母异位词](https://leetcode.cn/problems/find-all-anagrams-in-a-string/description/)
+
+题目描述：
+给定两个字符串 s 和 p，找到 s 中所有 p 的 异位词 的子串，返回这些子串的起始索引。不考虑答案输出的顺序。
+异位词 指由相同字母重排列形成的字符串（包括相同的字符串）。
+
+```java
+```
+
+#### [349.两个数组的交集](https://leetcode.cn/problems/intersection-of-two-arrays/description/)
+
+题目描述：
+给定两个数组 nums1 和 nums2 ，返回 它们的交集 。输出结果中的每个元素一定是 唯一 的。我们可以 不考虑输出结果的顺序 。
+
+```java
+class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        Set<Integer> set1=new HashSet<>();
+        Set<Integer> set2=new HashSet<>();
+        for(int num:nums1){
+            set1.add(num);
+        }
+        for(int num:nums2){
+            if(set1.contains(num)){
+                set2.add(num);
+            }
+        }
+        int[] res=new int[set2.size()];
+        int k=0;
+        for(int num:set2){
+            res[k++]=num;
+        }
+        return res;
+    }
+}
+```

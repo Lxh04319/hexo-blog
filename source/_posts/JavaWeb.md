@@ -382,8 +382,8 @@ SpringBoot已内嵌依赖
   
 ##### 响应
 
-* ``ResponseBody`` 方法返回值直接响应(实体类/集合-->JSON)
-``RestController``
+* ``@ResponseBody`` 方法返回值直接响应(实体类/集合-->JSON)
+``@RestController=@Controller+@ResponseBody``
 
 * 统一响应结果(返回类型)--封装 ``Result(code,msg,data)``
   全部转为JSON格式数据
@@ -398,6 +398,101 @@ SpringBoot已内嵌依赖
     * 依赖注入 DI
     * Bean对象
 * IOC
+  * ``@Component`` 若想切换 将注解注释掉即可(不属于以下三类衍生注解时，采用此注解)
+  * 衍生注解
+    * 标注在控制器类上``@Controller``(可省)
+    * 标注在业务类上``@Service``
+    * 标注在数据访问类上``@Repository``
+    * Bean组件扫描 ``@ComponentScan({包名})`` 启动类``@SpringBootApplication``包含扫描，但默认扫描当前包及其子包
+  * 规范！！推荐放入启动类所在包机器子包下
 * DI
+  * ``@Autowired`` Spring框架提供的注解 按类型注入
+  * 若存在多个类型相同的Bean对象
+    * ``@Primary``不推荐
+    * ``@Autowired+@Qualifier("bean名称")``
+    * ``@Resource(name="bean名")`` JDK提供的注解，按名称注入(注意与@Autowired的区别)
 
 ### MySQL
+
+* 关系型数据库(表结构 SQL语句操作)
+* SQL语句
+  * DDL 定义对象
+  * DML 操作数据
+  * DQL 查询表
+  * DCL 控制权限
+
+#### 数据库设计-DDL
+
+* SQL语句
+
+```sql
+//search
+show databases;
+select database();
+//use
+use ...;
+//create
+create database if not exists ...;
+//delete
+drop database if exits ...;
+```
+
+* 图形化界面操作--navicat等
+
+* DDL表操作--创建 查询修改删除(略)
+  
+```sql
+//create
+create table tb(
+  字段 类型 [约束] comment ['注释']
+) comment ['表注释']
+
+//约束
+not null --非空
+unique --唯一
+primary key --非空唯一
+default --默认
+auto_increment --自增
+
+//字段类型
+数值类型 
+tinyint int bigint double decimal(精度更高) unsigned(无符号)
+字符串类型
+char varchar(可变长度) blob text 
+日期类型
+date time year datetime 
+```
+
+#### 数据库操作-DML DQL
+
+##### 操作-DML
+
+* INSERT
+
+```sql
+insert into 表名 (字段名,...) values (值,...)(值,...);
+now()//获取当前时间
+```
+
+* UPDATE
+
+```sql
+update 表名 set 字段名1=值1,... [where 条件];
+```
+
+* DELETE
+  
+```sql
+delete from 表名 [where 条件];
+//删除某一字段的值--UPDATE修改为null
+```
+
+##### 查询-DQL
+
+```sql
+select 字段 from 表名 where 条件 group by 分组字段 having 分组后条件 order by 排序字段 limit 分页参数
+```
+
+##### 多表操作
+
+#### 数据库优化-DCL

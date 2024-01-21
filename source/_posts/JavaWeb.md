@@ -490,9 +490,39 @@ delete from 表名 [where 条件];
 ##### 查询-DQL
 
 ```sql
-select 字段 from 表名 where 条件 group by 分组字段 having 分组后条件 order by 排序字段 limit 分页参数
+select 字段 from 表名 
+where 条件 
+group by 分组字段 having 分组后条件 ->聚合统计
+order by 排序字段 
+limit 分页参数
+
+//where 与 having
+where 分组前过滤，不能对聚合函数判断
+having 分组后过滤
+
+//去除重复查询
+select distinct 字段 from 表名
+//逻辑运算符
+between...and... (包含左右)
+in(...) 在...之中
+like 模糊查询 _匹配单个字符 / %匹配任意个字符
+is null 判空
+
+//聚合函数
+select count() from ->统计数量
+select min/max() from
+select avg() from
+select sum() from
+
+//排序
+ASC 升序 默认
+DESC 降序
+
+//查询
+limit 起始索引,查询数量
 ```
 
-##### 多表操作
+##### 多表
+
 
 #### 数据库优化-DCL

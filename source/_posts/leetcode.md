@@ -806,3 +806,63 @@ class Solution {
     }
 }
 ```
+
+#### [350.两个数组的交集||](https://leetcode.cn/problems/intersection-of-two-arrays-ii/description/)
+
+题目描述：
+给你两个整数数组 nums1 和 nums2 ，请你以数组形式返回两数组的交集。返回结果中每个元素出现的次数，应与元素在两个数组中都出现的次数一致（如果出现次数不一致，则考虑取较小值）。可以不考虑输出结果的顺序。
+
+```java
+class Solution {
+    public int[] intersect(int[] nums1, int[] nums2) {
+        Map<Integer,Integer> map=new HashMap<>();
+        for(int i=0;i<nums1.length;i++){
+            map.put(nums1[i],map.getOrDefault(nums1[i],0)+1);
+        }
+        List<Integer> l=new ArrayList<>();
+        for(int i=0;i<nums2.length;i++){
+            if(map.getOrDefault(nums2[i],0)!=0){
+                l.add(nums2[i]);
+                map.put(nums2[i],map.get(nums2[i])-1);
+            }
+        }
+        int[] res=new int[l.size()];
+        for(int i=0;i<l.size();i++){
+            res[i]=l.get(i);
+        }
+        return res;
+    }
+}
+```
+
+#### [202.快乐数](https://leetcode.cn/problems/happy-number/description/)
+
+题目描述：
+编写一个算法来判断一个数 n 是不是快乐数。
+「快乐数」 定义为：
+对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和。
+然后重复这个过程直到这个数变为 1，也可能是 无限循环 但始终变不到 1。
+如果这个过程 结果为 1，那么这个数就是快乐数。
+如果 n 是 快乐数 就返回 true ；不是，则返回 false 。
+
+```java
+class Solution {
+    public boolean isHappy(int n) {
+        Set<Integer> set=new HashSet<>();
+        while(true){
+            int sum=0;
+            while(n>0){
+                int t=n%10;
+                sum+=t*t;
+                n/=10;
+            }
+            if(sum==1) return true;
+            if(set.contains(sum)) return false;
+            else{
+                set.add(sum);
+                n=sum;
+            }
+        }
+    }
+}
+```

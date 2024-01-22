@@ -246,7 +246,8 @@ NexT.utils = NexT.$u = {
   },
 
   isPisces: function () {
-    return CONFIG.scheme === 'Pisc
+    return CONFIG.scheme === 'Pisces';
+  },
 
   isGemini: function () {
     return CONFIG.scheme === 'Gemini';

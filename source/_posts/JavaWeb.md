@@ -522,7 +522,70 @@ DESC 降序
 limit 起始索引,查询数量
 ```
 
-##### 多表
+##### 多表设计
 
+* 外键约束--物理外键--容易引发数据库死锁(不推荐)
+
+```sql
+(表外alter table 表名 add) constraint 外键名称 foreign key (字段) references 主表
+```
+
+* 外键约束--逻辑约束(推荐)
+  业务层逻辑关联
+
+* 一对一--采取unique 多对多--采取中间表
+
+##### 多表查询
+
+消除无效笛卡尔积(where 限制)
+
+* 连接查询
+  * 内连接--交集部分
+    * 隐式内连接 ``select 字段 from 表1，表2 where ...``
+    * 显示内连接 ``select 字段 from 表1 [inner] join 表2 on ...``
+  * 外连接--完整包含某表
+    * 左外连接 ``select 字段 from 表1 left [outer] join 表2 on ...``
+    * 右外连接 ``select 字段 from 表1 right [outer] join 表2 on ...``
+* 子查询--嵌套查询
+  * ``select 字段 from 表1 where ...(select ...)``
+  * 标量子查询 单行单列
+  * 列子查询 in / not in
+  * 行子查询
+  * 表子查询
+
+##### 事务
+
+事务控制
+
+* 开启事务``start transaction / begin;``
+* 提交事务``commit;``
+* 回滚事务``rollback;``
 
 #### 数据库优化-DCL
+
+##### 索引
+
+* 提高查询效率 降低排序成本 降低CPU消耗
+* 索引会占用存储空间 降低增删改的效率
+* 结构
+* 默认为B+Tree结构组织的索引
+* 二叉搜索树
+  很容易产生斜树--，效率--
+  红黑树
+  与二叉搜索树 **一个节点均只有两个子节点--大数据量层级深，检索速度慢**
+
+* B+Tree 多路平衡搜索树
+  1. 每个节点多个key
+  2. 所有数据都在叶子节点中 非叶子节点用来索引
+  3. 叶子节点间双向链表且有序
+
+```sql
+//创建索引 主键会自动创建索引 唯一约束的字段也会自动创建索引
+create [unique] index idx_id on tb(id1,id2...);
+show index from tb;
+drop index idx on tb;
+```
+
+### MyBatis
+
+简化JDBC开发

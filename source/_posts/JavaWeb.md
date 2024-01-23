@@ -711,3 +711,56 @@ public Emp select(Integer id);
 XML--实现复杂SQL功能
 
 #### 动态SQL
+
+动态查询--多条件查询时可只输入其中几项查询
+动态更新--更新其中几项(这样不会将其他项更新为null)
+
+* ``<if>``
+  条件成立则拼接
+
+  ```sql
+  //where 需要改成标签-自动判断需要哪几个条件去掉多余的and
+  //同理若为动态更新(update) 则将set 改为标签
+  <select id="list" resultType="com.pojo.emp">
+  select *
+  from emp
+  <where>
+    <if test="id!=null">
+      id =#{id}
+    </if>
+    <if test="user!=null">
+      and user like concat('%',#{name},'%')
+    </if>
+  </where>
+  </select>
+  ```
+
+动态删除--批量删除
+
+* ``<foreach>``
+  
+  ```sql
+  <delete id="delid">
+    delete from emp
+    where id in
+    <foreach collection="idlist" item="id" separator="," open="(" close=")">
+      #{id}
+      //可采用Arrays.asList
+    </foreach>
+  </delete>
+  ```
+
+查询全部字段时不建议使用``select *`` 而是将所有字段列出来--可能会重复使用
+
+* ``<sql>``
+  
+  ```sql
+  //单独抽取成片段
+  <sql id="commonselect">
+    select id,user... from emp
+  </sql>
+
+  //在查询时引入代替原来的select ... from ...
+  <include refid="commonselect"/>
+  ```
+  

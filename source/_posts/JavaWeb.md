@@ -570,7 +570,7 @@ limit 起始索引,查询数量
 * 结构
 * 默认为B+Tree结构组织的索引
 * 二叉搜索树
-  很容易产生斜树--，效率--
+  很容易产生斜树,效率--
   红黑树
   与二叉搜索树 **一个节点均只有两个子节点--大数据量层级深，检索速度慢**
 
@@ -588,4 +588,126 @@ drop index idx on tb;
 
 ### MyBatis
 
-简化JDBC开发
+简化JDBC开发(操作关系型数据库的API)
+
+#### MyBatis入门
+
+* mybatis相关配置
+* Mapper接口
+
+##### 数据库连接池
+
+类似线程池
+
+* SpringBoot--默认Hikari连接池
+* 其他数据库连接池 Druid
+  
+##### lombok
+
+解决实体类中需要写get set toString等方法冗杂的问题
+
+* 常用注解
+  
+  ```sql
+  @Getter/@Setter
+  @ToString
+  @EqualsAndHashCode
+  @Data(=上面四个之和)
+  @NoArgsConstructor
+  @AllArgsConstructor
+  ```
+
+#### Mybatis基础操作--注解开发
+
+##### 删除
+  
+```sql
+//动态传值 不要将where条件限制为id=1这样
+//若有返回 -void改成int 返回0/1
+@Mapper
+public interface usermapper {
+    @Delete("delete from emp where id= #{id}")
+    public void delete(Integer id);
+}
+```
+
+* Mybatis预编译SQL
+  * 性能高
+  * 安全 防SQL语句注入
+* 参数占位符
+  * #{..} 参数传值，预编译替换成? 
+  * ${..} 对表名等动态设置时使用拼接SQL，易产生SQL注入问题
+
+##### 新增
+
+```sql
+//字段名通常采用下划线命名 如user_id
+//实体类属性名通常采用驼峰式命名 如userId
+@Insert("insert into emp(id,...字段名) values (#{id},...属性名)")
+public void insert(Emp emp);
+```
+
+* 主键返回
+
+```sql
+@Options(keyProperty="id",useGeneratedKeys=true)
+//将主键id的值返回给对象emp
+@Insert("insert into emp(id,...字段名) values (#{id},...属性名)")
+public void insert(Emp emp);
+```
+
+##### 更新(修改)
+
+```sql
+@Update("update emp set user_name=#{userName},... where id=1")//根据主键确定
+public void update(Emp emp);
+```
+
+##### 查询
+
+```sql
+@Select("select * from emp where id= #{id}")
+public Emp select(Integer id);
+```
+
+* 出现的问题--mybatis智慧自动封装实体属性名与字段名一致的
+* 解决方案一：
+  给字段起别名
+
+  ```sql
+  @Select("select user_id userId from emp where id= #{id}")
+  public Emp select(Integer id);
+  ```
+
+* 解决方案二:
+  mybatis注解手动映射封装 @Results @Result
+* 解决方案三：
+  **mybatis驼峰命名自动映射**
+  application.properties里配置
+
+  ```sql
+  mybatis.configuration.map-underscore-to-camel-case=true
+  ```
+
+条件查询--封装到集合 可能采用like模糊查询--特殊注意 如查询姓名时不可以``%#{name}%``预编译不能通过 应采取``%${name}%``
+
+或使用concat函数 ``concat('%','#{name}','%')``
+
+#### XML映射文件--动态开发
+
+规范：
+
+![Alt text](image-1.png)
+
+```sql
+<mapper namespace="com.mapper.usermapper">
+    <select id="list" resultType="com.pojo.user">
+        select * from emp where id = #{id}
+    </select>
+</mapper>
+```
+
+使用注解--完成简单增删改查
+XML--实现复杂SQL功能
+
+#### 动态SQL

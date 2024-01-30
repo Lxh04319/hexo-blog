@@ -909,6 +909,15 @@ REQUIRES_NEW -创建新事务 默认是直接加入事务(REQUIRED)
 
 #### 分模块设计和开发
 
+将项目拆分为若干模块
+注意引入依赖
+
 #### 继承与聚合
+
+解决各个模块依赖配置冗杂 统一管理
+
+* 创建parent父工程 打包方式为pom(默认jar) --仅用来配置依赖 ``<packaging>pom</packaging>``
+* 父工程继承父类spring-boot-starter-parent
+* 子工程配置关系``<parent></parent>里面添加<relativePath>../xxparent/pom.xml</relativePath>``
 
 #### 私服

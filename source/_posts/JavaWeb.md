@@ -866,11 +866,49 @@ REQUIRES_NEW -创建新事务 默认是直接加入事务(REQUIRED)
 
 #### 配置优先级
 
+* 命令行参数 --server.port= (maven package打包成jar包后在命令行后面写入)
+* java系统属性 --Dserver.port=
+* application.properties
+* **application.yml(推荐)**
+* application.yaml
+
+优先级依次下降
+
 #### bean原理
 
-#### SpringBoot起步依赖
+* 获取bean
+  * 根据bean名称获取``applicationContext.getBean("controller")``默认bean名为类名首字母小写
+  * bean类型获取``applicationContext.getBean(Controller.class)``
+  * 名称及类型获取
+* bean作用域
+  * singleton 单例
+  * prototype 非单例
+  * ``@Scope("prototype")`` 默认是单例的
+* 第三方bean
+  * 需要管理的bean对象来自第三方，无法通过@component注入
+  * 采用@Bean注解
+  * 建议新建配置类 在其中配置@Bean
+  * 第三方bean依赖注入 在配置bean的方法中直接传入参数即可
 
-#### SpringBoot自动配置
+#### SpringBoot原理
+
+##### SpringBoot起步依赖
+
+简化spring需要配置大量依赖
+起步依赖原理--maven依赖传递
+
+##### SpringBoot自动配置
+
+自动配置如bean对象存入IOC容器中
+自动配置：
+
+1. 方案一 ``@ComponentScan``扫描
+2. 方案二 ``@Import``导入 采用第三方依赖``@Enablexxx``注解封装
 
 ### Maven其他
 
+#### 分模块设计和开发
+
+#### 继承与聚合
+
+#### 私服

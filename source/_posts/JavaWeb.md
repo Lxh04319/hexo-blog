@@ -763,4 +763,114 @@ XML--实现复杂SQL功能
   //在查询时引入代替原来的select ... from ...
   <include refid="commonselect"/>
   ```
-  
+
+### other
+
+#### 会话技术
+
+会话跟踪
+
+* 客户端 Cookie
+* 服务端 Session
+* 令牌
+
+#### JWT令牌
+
+* 生成/解析令牌
+
+  ```java
+  //
+  Map<String,Object> claims=new HashMap<>();
+  claims.put("id",1);
+  String jwt= Jwts.builder().
+          signWith(SignatureAlgorithm.HS256,"lxh11111")
+          .setClaims(claims)
+          .setExpiration(new Date(System.currentTimeMillis()+3600*1000))
+          .compact();
+  //
+  Claims claim1=Jwts.parser()
+          .setSigningKey("lxh11111")
+          .parseClaimsJws("...")
+          .getBody();
+  ```
+
+* 校验
+
+#### 过滤器Filter/拦截器Interceptor
+
+* Filter(Web)
+  * 执行流程
+  * 拦截路径
+  * 过滤器链 多个过滤器
+  * ![Alt text](image-2.png)
+* Interceptor(Spring)
+  * 定义拦截器 实现HandlerInterceptor接口->注册拦截器(config)
+  * 拦截路径
+    * /* 拦截一级路径
+    * /** 拦截任意级路径
+  * 执行流程
+    ![Alt text](image-3.png)
+
+#### 异常处理
+
+全局异常处理器
+
+### AOP
+
+#### 事务管理
+
+事务属性--回滚 传播
+
+```java
+@Transactional ---事务
+//默认只有runtime时才回滚 rollbackFor控制出现何种异常才回滚
+@Transactional(rollbackFor=Exception.class)
+//传播
+@Transactional（propagation=Propagation.值)
+//值
+REQUIRES_NEW -创建新事务 默认是直接加入事务(REQUIRED)
+```
+
+#### AOP
+
+##### 执行 (动态代理)
+
+```java
+//引入aop依赖
+
+@Aspect AOP类
+@Around("execution(*包名.*(..))")
+```
+
+##### 通知
+
+* 通知类型
+  * ``@Around`` 环绕通知--需要ProceedingJoinPoint.proceed()调用原始方法，返回值必须指定为Object
+  * ``@Before`` ``@After``
+  * ``@AfterReturning`` ``@AfterThrowing``
+  * ``@Pointcut("execution(*..)")``抽取公共切点表达式
+* 通知顺序
+  * 按字符顺序
+  * ``@Order(1)``指定顺序
+* 切入点表达式
+  * ``execution(访问修饰符(可省) 返回值 包名.类名.方法(参数) throws 异常(可省))``
+  * 通配符 * 单个独立，通配任一值
+  * 通配符 .. 多个连续，通配任意层级
+  * ``@annotation(com...mylog)``在需要的方法上加上``@mylog``注解(可以起别的名，要定义注解类，在里面定义注解名)
+* 连接点
+  * spring中采取JoinPoint抽象连接点，获取方法参数等
+  * ``@Around``只能使用``ProceedingJoinPoint``
+  * 其他四个注解只能``JoinPoint``
+
+### SpringBoot原理
+
+#### 配置优先级
+
+#### bean原理
+
+#### SpringBoot起步依赖
+
+#### SpringBoot自动配置
+
+### Maven其他
+

@@ -914,10 +914,34 @@ REQUIRES_NEW -创建新事务 默认是直接加入事务(REQUIRED)
 
 #### 继承与聚合
 
+##### 继承
+
+###### 继承管理
+
 解决各个模块依赖配置冗杂 统一管理
 
 * 创建parent父工程 打包方式为pom(默认jar) --仅用来配置依赖 ``<packaging>pom</packaging>``
 * 父工程继承父类spring-boot-starter-parent
 * 子工程配置关系``<parent></parent>里面添加<relativePath>../xxparent/pom.xml</relativePath>``
 
+###### 版本锁定
+
+* 父工程中添加``<dependencyManagement></dependencyManagement>``其中只用于声明依赖版本，子工程仍需引入依赖(无需写入版本号)
+* 自定义属性(统一管理版本) ``<properties><lombok.version>1.18.24</lombok.version></properties>`` 
+  这样在``<dependencyManagement>..<version>${lombok.version</version>..</dependencyManagement>``即可
+
+##### 聚合
+
+将父工程作为聚合工程--快速构建项目
+pom里声明``<modules><module>(要聚合的模块)</module></modules>``
+
 #### 私服
+
+本地仓库->私服(release snapshot central)->中央仓库
+
+配置私服
+
+* server标签配置个人凭证
+* mirror,profiles配置
+* pom.xml添加私服地址
+* 运行deploy生命周期

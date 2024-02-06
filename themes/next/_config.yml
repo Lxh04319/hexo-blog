@@ -372,8 +372,10 @@ codeblock:
     light: prism
     dark: prism-dark
   # Add copy button on codeblock
+  border_radius: 6px
   copy_button:
-    enable: false
+    enable: true
+    show_result: true
     # Available values: default | flat | mac
     style:
   # Fold code block
@@ -642,10 +644,10 @@ motion:
 # Progress bar in the top during page loading.
 # For more information: https://github.com/CodeByZach/pace
 pace:
-  enable: false
+  enable: true
   # All available colors:
   # black | blue | green | orange | pink | purple | red | silver | white | yellow
-  color: blue
+  color: green
   # All available themes:
   # big-counter | bounce | barber-shop | center-atom | center-circle | center-radar | center-simple
   # corner-indicator | fill-left | flat-top | flash | loading-bar | mac-osx | material | minimal

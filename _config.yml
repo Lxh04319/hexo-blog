@@ -4,7 +4,7 @@
 
 # Site
 title: star⭐
-subtitle: It's worth the trip.
+subtitle: It's a rewarding trip.
 description: 不虚此行
 keywords:
 author: lxh11111
@@ -95,6 +95,17 @@ pagination_dir: page
 include:
 exclude:
 ignore:
+
+#统计字数
+symbols_count_time:
+  count: true
+  suffix: '字'
+  suffix_title: '字数统计'
+  symbols: true
+  time: true
+  time_suffix: '分钟'
+  total_symbols: true
+  total_time: true
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/

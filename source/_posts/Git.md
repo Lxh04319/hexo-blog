@@ -4,7 +4,7 @@ date: 2024-1-31
 tags:
   - Git
 description: some understanding and supplement🐨
-abbrlink: 4
+abbrlink: 10004
 categories: 
   - Learn
 ---

@@ -4,7 +4,7 @@ date: 2024-1-11
 tags:
   - java
 description: 不想再补了啊啊啊！
-abbrlink: 1
+abbrlink: 10002
 categories: 
   - Learn
 ---

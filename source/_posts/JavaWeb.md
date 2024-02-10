@@ -4,7 +4,7 @@ date: 2024-1-15
 tags:
   - java
 description: 救我 我要洗了
-abbrlink: 3
+abbrlink: 10003
 categories: 
   - Learn
 ---

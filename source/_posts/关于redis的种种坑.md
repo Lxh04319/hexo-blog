@@ -1,6 +1,6 @@
 ---
-title: JavaWeb
-date: 2024-1-15
+title: 关于Redis配置及使用的种种坑
+date: 2024-2-11
 tags:
   - java
 description: 配置以及使用redis时踩过的种种坑🥺TAT
@@ -13,7 +13,7 @@ categories:
 ### 写在前面
 
 * 谨以此篇记录本🐭在学习redis时遇到的坑坑坑坑坑
-* 想到哪就更
+* 想到哪就更哪
 
 ---
 
@@ -59,7 +59,7 @@ linux有很多版本 这里选了ubuntu 可视化
 
 命令:
 ```
-wget http://download.redis.io/releases/redis-5.0.4.tar.gz
+wget http://download.redis.io/releases/redis-7.2.4.tar.gz
 ```
 
 #### 解压及安装

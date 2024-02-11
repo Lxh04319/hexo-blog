@@ -4,7 +4,7 @@ date: 2024-2-11
 tags:
   - java
 description: 配置以及使用redis时踩过的种种坑🥺TAT
-abbrlink: 10004
+abbrlink: 10005
 categories: 
   - Learn
   - Redis
@@ -169,9 +169,9 @@ https://github.com/lework/RedisDesktopManager-Windows/releases
 
 ### redis的java客户端
 
-这里先采取jredis简单测试了一下
+这里先采取Jedis简单测试了一下
 
 test成功
 
-如果RESP连接不上，那jredis多半连接凉凉
+如果RESP连接不上，那Jedis多半连接凉凉
 本质应该是一样的，都是在win上连接linux当中运行的redis

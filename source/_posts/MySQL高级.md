@@ -27,7 +27,7 @@ categories:
 
 * InnoDB
   支持事务、行级锁、外键
-  逻辑存储结构：![alt text](image-10.png)
+  逻辑存储结构：![alt text](./MySQL高级/image-10.png)
 * MyISAM
   支持表锁，不支持行锁、事务、外键
 * Memory
@@ -36,7 +36,7 @@ categories:
 
 #### 存储引擎选择
 
-![alt text](image-11.png)
+![alt text](./MySQL高级/image-11.png)
 
 #### Linux下安装MySQL
 
@@ -64,7 +64,7 @@ categories:
 
 **MySQL里的B+树**
 增加了优化
-![alt text](image-12.png)
+![alt text](./MySQL高级/image-12.png)
 
 ##### Hash索引
 
@@ -87,7 +87,7 @@ InnoDB也可以分为两种
   * 均没有 自动省委rowid作索引
 * 二级索引
 * 回表查询
-  ![alt text](image-13.png)
+  ![alt text](./MySQL高级/image-13.png)
   
 #### 索引语法
 

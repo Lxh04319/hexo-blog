@@ -38,6 +38,8 @@ categories:
 
 ![alt text](image-11.png)
 
+#### Linux下安装MySQL
+
 ### 索引
 
 #### 索引概述
@@ -77,10 +79,63 @@ InnoDB不支持hash索引，但有自适应功能，指定条件下根据B+索�
 * 常规索引
 * 全文索引
 
+InnoDB也可以分为两种
+
+* 聚集索引
+  * 存在主键 主键索引为聚集索引
+  * 不存在主键 第一个唯一索引为聚集索引
+  * 均没有 自动省委rowid作索引
+* 二级索引
+* 回表查询
+  ![alt text](image-13.png)
+  
 #### 索引语法
+
+* 创建索引
+``create [unique|fulltext] index index_name on table_name (index_col_name,...);``
+* 查看索引
+``show index from table_name;``
+* 删除索引
+``drop index index_name on table_name;``
 
 #### SQL性能分析
 
+* 查看SQL执行频率
+  ``show global status like 'Com_______'``
+  七个下划线
+  查看增删改查的频率--查询频率高要进行sql优化
+* 慢查询日志
+  定位sql语句，查看哪一句效率低
+  * 首先在``/etc/my.cnf``中开启慢查询日志
+  ``slow_query_log=1 #开启``
+  * ``long_query_time=2 #设置超过时间``
+  超时则会在慢查询日志中输出
+  * 慢查询日志在``/var/lib/mysql/localhost-slow.log``里
+  ``tail -f localhost-slow.log``命令可查看慢查询日志尾部信息
+* profile详情
+  * 打开开关
+    ``select @@have_profiling;``
+    ``set profiling=1;``
+  * 查看
+  
+    ```sql
+    show profiles;
+    show profile for query query_id;
+    show profile cpu for query query_id;
+    ```
+
+* explain执行计划
+  * 查询性能
+  ``explain select 字段 from 表...``
+  * 查询结果字段含义
+  ![alt text](image-14.png)
+
 #### 索引使用
+
+* 最左前缀法则
+* 索引失效
+* SQL提示
+* 覆盖索引
+* 前缀索引
 
 #### 索引设计原则

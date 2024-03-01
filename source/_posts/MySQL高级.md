@@ -14,7 +14,7 @@ categories:
 
 #### MySQl体系结构
 
-![alt text](image-8.png)
+![alt text](./MySQL高级/image-8.png)
 
 #### 存储引擎简介
 

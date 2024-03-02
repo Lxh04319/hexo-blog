@@ -339,7 +339,7 @@ Application.java-->server.port=8015
   * 3xx 重定向
   * 4xx 客户端错误
   * 5xx 服务器错误
-  * ![Alt text](image.png)
+  * ![Alt text](https://pic.imgdb.cn/item/65e2e3f79f345e8d03046d5b.png)
 * 响应头
   * Content-Type 相应内容类型
   * Content-Length
@@ -802,14 +802,14 @@ XML--实现复杂SQL功能
   * 执行流程
   * 拦截路径
   * 过滤器链 多个过滤器
-  * ![Alt text](image-2.png)
+  * ![Alt text](https://pic.imgdb.cn/item/65e2e3ab9f345e8d03038d0a.png)
 * Interceptor(Spring)
   * 定义拦截器 实现HandlerInterceptor接口->注册拦截器(config)
   * 拦截路径
     * /* 拦截一级路径
     * /** 拦截任意级路径
   * 执行流程
-    ![Alt text](image-3.png)
+    ![Alt text](https://pic.imgdb.cn/item/65e2e3c79f345e8d0303e22b.png)
 
 #### 异常处理
 

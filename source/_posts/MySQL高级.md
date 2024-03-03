@@ -522,3 +522,40 @@ InnoDB不支持hash索引，但有自适应功能，指定条件下根据B+索�
 * 使用较少，而且要求有返回值，通常可以使用**存储过程**代替
 
 #### 触发器
+
+* 介绍：
+  与表有关的数据库对象，指在insert/update/delete之前(BEFORE)或之后(AFTER)，触发并执行触发器中定义的SQL语句集合。这种特性可以协助应用在数据库端确保数据的完整性、日志记录、数据校验等操作
+* 使用别名OLD和NEW来引用触发器中发生变化的记录内容，与其他的数据库相似。现在触发器还只支持行级触发，不支持语句级触发
+* 类型
+  ![alt text](https://pic.imgdb.cn/item/65e49b919f345e8d0317e8a1.jpg)
+* 语法
+  * 创建
+  
+  ```sql
+  CREATE TRIGGER trigger_name
+  BEFORE/AFTER INSERT/UPDATE/DELETE
+  ON tbl_name FOR EACH ROW -- 行级触发器
+  BEGIN
+  trigger_stmt ;
+  END;
+  ```
+
+  * 查看
+  
+  ```sql
+  SHOW TRIGGERS ;
+  ```
+  
+  * 删除
+  
+  ```sql
+  DROP TRIGGER [schema_name.]trigger_name ; -- 如果没有指定 schema_name，默认为当前数据库 。
+  ```
+  
+### 锁
+
+#### 全局锁
+
+#### 表级锁
+
+#### 行级锁

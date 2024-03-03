@@ -40,6 +40,9 @@ categories:
 
 #### Linux下安装MySQL
 
+* 根据redis，还是建议直接在linux里安装mysql
+* 安装到windows需上传至linux并解压
+
 ### 索引
 
 #### 索引概述
@@ -60,7 +63,7 @@ categories:
 * 二叉树缺点：顺序插入容易**形成一个链表，且大数据量下层级很深**
 * 红黑树缺点：本质还是二叉树，**大数据量下层级深**
 * B树(多路平衡查找树)缺点：叶子节点和非叶子节点均储存数据，导致一页中存储的键值减少，增加树高度
-* B+树 均在**叶子节点**上，且添加双向指针
+* B+树 均在**叶子节点**上，且添加双向指针(双向链表)
 
 **MySQL里的B+树**
 增加了优化
@@ -79,7 +82,7 @@ InnoDB不支持hash索引，但有自适应功能，指定条件下根据B+索�
 * 常规索引
 * 全文索引
 
-InnoDB也可以分为两种
+**InnoDB也可以分为两种**
 
 * 聚集索引
   * 存在主键 **主键索引**为聚集索引
@@ -295,6 +298,227 @@ InnoDB也可以分为两种
 
 #### 存储过程
 
+##### 基础
+
+* 介绍
+  事先经过编译并存储在数据库中的一段sql语句，简化开发，减少数据传输，即**sql语句的封装与重用**
+* 语法
+  * 创建
+
+    ```sql
+    create procedure name(参数)
+    begin
+      -sql语句
+    end;
+    ```
+
+  * 注意：在命令行中执行上述语句会报错，因为执行到sql语句分号时视为语句结束，并没有识别到end后的分号
+    **解决**：使用``delimiter $$``设置结束符号(这里设置为$$)，这样将end后的分号改为$$，就可以执行整个创建语句，注意结束后记得将结束符号改回``;``
+
+  * 调用
+    ``call name(参数);``
+  * 查看
+  
+    ```sql
+    select * from information_schema routines where routine_schema='xxx'; #查询指定数据库存储过程及状态信息
+    show create procedure name; #查询某个存储过程定义
+    ```
+
+  * 删除
+    ``drop procedure [if exists] name;``
+
+##### 变量
+
+* 系统变量
+  * 全局变量**global**/会话变量**session**
+  * 查看
+
+    ```sql
+    SHOW [ SESSION | GLOBAL ] VARIABLES ; -- 查看所有系统变量
+    SHOW [ SESSION | GLOBAL ] VARIABLES LIKE '......'; -- 可以通过LIKE模糊匹配方式查找变量
+    SELECT @@[SESSION | GLOBAL] 系统变量名; -- 查看指定变量的值
+    ```
+
+  * 设置
+
+  ```sql
+  SET [ SESSION | GLOBAL ] 系统变量名 = 值 ;
+  SET @@[SESSION | GLOBAL]系统变量名 = 值 ;
+  ```
+
+* 用户自定义变量
+  **不需要声明**，直接``@name``即可
+  * 赋值
+    方式一：
+
+    ```sql
+    SET @var_name = expr [, @var_name = expr] ... ;
+    SET @var_name := expr [, @var_name := expr] ... ;
+    ```
+
+    方式二：
+
+    ```sql
+    SELECT @var_name := expr [, @var_name := expr] ... ;
+    SELECT 字段名 INTO @var_name FROM 表名;
+    ```
+  
+    没赋值直接使用也不会报错，返回null
+  * 使用
+    ``select @var_name;``
+* 局部变量
+  访问之前**需要声明**，在begin~end间生效
+  * 声明
+    ``DECLARE 变量名 变量类型 [DEFAULT ... ] ;``
+  * 赋值
+
+    ```sql
+    SET 变量名 = 值 ;
+    SET 变量名 := 值 ;
+    SELECT 字段名 INTO 变量名 FROM 表名 ... ;
+    ```
+
+##### 条件判断
+
+* if
+  * 语法
+
+  ```sql
+  IF 条件1 THEN
+  .....
+  ELSEIF 条件2 THEN -- 可选
+  .....
+  ELSE -- 可选
+  .....
+  END IF;
+  ```
+
+* 参数
+  * 类型
+    * ``in`` 输入参数(默认)
+    * ``out`` 输出，返回值
+    * ``inout`` 既可以输入也可以输出
+  * 用法
+
+    ```sql
+    CREATE PROCEDURE 存储过程名称 ([ IN/OUT/INOUT 参数名 参数类型 ])
+    BEGIN
+    -- SQL语句
+    END ;
+    ```
+
+* case
+  * 语法一
+  
+  ```sql
+  -- 含义： 当case_value的值为 when_value1时，执行statement_list1，当值为 when_value2时，
+  执行statement_list2， 否则就执行 statement_list
+  CASE case_value
+  WHEN when_value1 THEN statement_list1
+  [ WHEN when_value2 THEN statement_list2] ...
+  [ ELSE statement_list ]
+  END CASE;
+  ```
+
+  * 语法二
+  
+  ```sql
+  -- 含义： 当条件search_condition1成立时，执行statement_list1，当条件search_condition2成
+  立时，执行statement_list2， 否则就执行 statement_list
+  CASE
+  WHEN search_condition1 THEN statement_list1
+  [WHEN search_condition2 THEN statement_list2] ...
+  [ELSE statement_list]
+  END CASE;
+  ```
+
+##### 循环
+
+* while
+  * 语法
+  
+  ```sql
+  -- 先判定条件，如果条件为true，则执行逻辑，否则，不执行逻辑
+  WHILE 条件 DO
+  SQL逻辑...
+  END WHILE;
+  ```
+
+* repeat
+  * 语法
+  
+  ```sql
+  -- 先执行一次逻辑，然后判定UNTIL条件是否满足，如果满足，则退出。如果不满足，则继续下一次循环
+  REPEAT
+  SQL逻辑...
+  UNTIL 条件
+  END REPEAT;
+  ```
+
+* loop
+  * ``leave`` 退出循环
+  * ``iterate`` 跳过当前，进入下一次循环
+  * 语法
+  
+  ```sql
+  [begin_label:] LOOP
+  SQL逻辑...
+  END LOOP [end_label];
+  LEAVE label; -- 退出指定标记的循环体
+  ITERATE label; -- 直接进入下一次循环
+  ```
+  
+##### 游标
+
+用于**存储查询结果集**的数据类型，存储过程和函数中使用游标对结果集循环处理
+
+* 声明
+  需要先声明普通变量，再声明游标
+  ``DECLARE 游标名称 CURSOR FOR 查询语句 ;``
+* open
+  ``OPEN 游标名称 ;``
+* fetch
+  ``FETCH 游标名称 INTO 变量 [, 变量 ] ;``
+* close
+  ``CLOSE 游标名称 ;``
+
+* 条件处理函数
+  解决使用游标获取数据时循环条件的处理
+  * 语法
+  
+  ```sql
+  DECLARE handler_action HANDLER FOR condition_value [, condition_value]
+  ... statement ;
+  handler_action 的取值：
+  CONTINUE: 继续执行当前程序
+  EXIT: 终止执行当前程序
+  condition_value 的取值：
+  SQLSTATE sqlstate_value: 状态码，如 02000
+  SQLWARNING: 所有以01开头的SQLSTATE代码的简写
+  NOT FOUND: 所有以02开头的SQLSTATE代码的简写
+  SQLEXCEPTION: 所有没有被SQLWARNING 或 NOT FOUND捕获的SQLSTATE代码的简写
+  ```
+  
+  * [状态码官方文档](https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html)
+  
 #### 存储函数
+
+* 有返回值的存储过程，存储函数的参数只能是IN类型的
+* 语法
+  
+  ```sql
+  CREATE FUNCTION 存储函数名称 ([ 参数列表 ])
+  RETURNS type [characteristic ...]
+  BEGIN
+  -- SQL语句
+  RETURN ...;
+  END ;
+  ```
+
+* characteristic说明
+  * DETERMINISTIC：相同的输入参数总是产生相同的结果
+  * NO SQL ：不包含 SQL 语句
+  * READS SQL DATA：包含读取数据的语句，但不包含写入数据的语句
+* 使用较少，而且要求有返回值，通常可以使用**存储过程**代替
 
 #### 触发器

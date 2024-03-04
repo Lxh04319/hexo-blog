@@ -556,6 +556,82 @@ InnoDB不支持hash索引，但有自适应功能，指定条件下根据B+索�
 
 #### 全局锁
 
+典型使用场景：做全库的逻辑备份
+
+* 一致性备份语法
+  * 加全局锁
+  ``flush tables with read lock ;``
+  * 数据备份
+  ``mysqldump -uroot –p(密码) 数据库名 > 复制后数据库路径.sql``
+  * 释放锁
+  ``unlock tables ;``
+* 弊端
+  * 如果在主库上备份，那么在备份期间都不能执行更新
+  * 如果在从库上备份，那么在备份期间从库不能执行主库同步过来的二进制日志（binlog），会导致主从延迟
+  * 在InnoDB引擎中可以在备份时加上参数 --single-transaction 参数来完成不加锁的一致性数据备份
+  ``mysqldump --single-transaction -uroot –p xxx > xxx.sql``
+
 #### 表级锁
 
+##### 表锁
+
+* 分类
+  * 表共享读锁 read lock
+  自身客户端只读不写，不影响其他客户端读，但阻塞写
+  * 表独占写锁 write lock
+  自身客户端可读写，阻塞其他客户端读写
+* 语法
+  * 加锁
+  ``lock tables 表名 read/write``
+  * 释放锁
+  ``unlock tables / 客户端断开连接``
+
+##### 元数据锁(MDL)
+
+* 加锁过程是系统自动控制，无需显式使用，在访问一张表的时候会自动加上
+* MDL锁主要作用是维护表元数据的数据一致性，在表上有活动事务的时候，不可以对元数据进行写入操作。为了避免DML与DDL冲突，保证读写的正确性
+* 当对一张表进行增删改查的时候，加MDL读锁(共享)，当对表结构进行变更操作的时候，加MDL写锁(排他)
+* ![alt text](https://pic.imgdb.cn/item/65e5ca679f345e8d03c98403.jpg)
+
+##### 意向锁
+
+避免DML在执行时，加的行锁与表锁的冲突，在InnoDB中引入了意向锁，使得表锁不用检查每行数据是否加锁，使用意向锁来减少表锁的检查
+
+* 分类
+  * 意向共享锁(IS): 由语句select ... lock in share mode添加。与表锁共享锁(read)兼容，与表锁排他锁(write)互斥
+  * 意向排他锁(IX): 由insert、update、delete、select...for update添加。与表锁共享锁(read)及排他锁(write)都互斥，意向锁之间不会互斥
+  * ``select object_schema,object_name,index_name,lock_type,lock_mode,lock_data from performance_schema.data_locks;``
+
 #### 行级锁
+
+##### 分类
+
+* 行锁（Record Lock）：锁定单个行记录的锁，防止其他事务对此行进行update和delete。在RC、RR隔离级别下都支持
+* 间隙锁（Gap Lock）：锁定索引记录间隙（不含该记录），确保索引记录间隙不变，防止其他事务在这个间隙进行insert，产生幻读。在RR隔离级别下都支持
+* 临键锁（Next-Key Lock）：行锁和间隙锁组合，同时锁住数据，并锁住数据前面的间隙Gap。在RR隔离级别下支持
+
+##### 行锁
+
+* 分类
+  * 共享锁（S）：允许一个事务去读一行，阻止其他事务获得相同数据集的排它锁
+  * 排他锁（X）：允许获取排他锁的事务更新数据，阻止其他事务获得相同数据集的共享锁和排他锁
+  * ![alt text](https://pic.imgdb.cn/item/65e5d2e49f345e8d03ed06fe.jpg)
+* 常见sql语句加的行锁
+  ![alt text](https://pic.imgdb.cn/item/65e5d3339f345e8d03ee27b8.jpg)
+* 默认情况下，InnoDB在 REPEATABLE READ事务隔离级别运行，InnoDB使用 next-key 锁进行搜索和索引扫描，以防止幻读
+  * 针对唯一索引进行检索时，对已存在的记录进行等值匹配时，将会自动优化为行锁
+  * InnoDB的行锁是针对于索引加的锁，不通过索引条件检索数据，那么InnoDB将对表中的所有记录加锁，此时 就会升级为表锁
+  * ``select object_schema,object_name,index_name,lock_type,lock_mode,lock_data from performance_schema.data_locks;``
+  
+##### 间隙锁&临键锁
+
+### InnoDB引擎
+
+#### 架构
+
+#### 事务原理
+
+#### MVCC
+
+### MySQL管理
+

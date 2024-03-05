@@ -313,7 +313,7 @@ InnoDB不支持hash索引，但有自适应功能，指定条件下根据B+索�
     ```
 
   * 注意：在命令行中执行上述语句会报错，因为执行到sql语句分号时视为语句结束，并没有识别到end后的分号
-    **解决**：使用``delimiter $$``设置结束符号(这里设置为$$)，这样将end后的分号改为$$，就可以执行整个创建语句，注意结束后记得将结束符号改回``;``
+    **解决**：使用``delimiter $$``设置结束符号(这里设置为``$$``)，这样将end后的分号改为$$，就可以执行整个创建语句，注意结束后记得将结束符号改回``;``
 
   * 调用
     ``call name(参数);``
@@ -635,11 +635,200 @@ InnoDB不支持hash索引，但有自适应功能，指定条件下根据B+索�
 
 ### InnoDB引擎
 
+#### 逻辑存储结构
+
+![alt text](https://pic.imgdb.cn/item/65e6e8389f345e8d0322c09a.png)
+
+* 表
+  是InnoDB存储引擎逻辑结构的最高层， 如果用户启用了参数 innodb_file_per_table(在8.0版本中默认开启)，则每张表都会有一个表空间（xxx.ibd，一个mysql实例可以对应多个表空间，用于**存储记录、索引**等数据
+* 段
+  分为数据段（Leaf node segment）、索引段（Non-leaf node segment）、回滚段（Rollback segment），InnoDB是索引组织表，数据段就是B+树的**叶子节点**， 索引段即为B+树的**非叶子节点**。段用来管理多个Extent（区）
+* 区
+  表空间的单元结构，每个区的大小为1M。 默认情况下，InnoDB存储引擎页大小为16K， 即一个区中一共有64个连续的页
+* 页
+  是InnoDB 存储引擎磁盘管理的最小单元，每个页的大小默认为 **16KB**。为了保证页的连续性，InnoDB 存储引擎每次从磁盘申请 4-5 个区
+* 行
+  InnoDB 存储引擎数据是按行进行存放的。
+  默认有两个隐藏字段：
+  * Trx_id：每次对某条记录进行改动时，都会把对应的事务id赋值给trx_id隐藏列
+  * Roll_pointer：每次对某条引记录进行改动时，都会把旧的版本写入到undo日志中，然后这个隐藏列就相当于一个指针，可以通过它来找到该记录修改前的信息
+  
 #### 架构
 
+![alt text](https://pic.imgdb.cn/item/65e6ae819f345e8d0397e0be.jpg)
+
+##### 内存结构
+
+![alt text](https://pic.imgdb.cn/item/65e6aea89f345e8d03983ecd.jpg)
+
+* Buffer Pool
+  可以**缓存磁盘**上经常操作的真实数据，在执行增删改查操作时，先操作缓冲池中的数据（若缓冲池没有数据，则从磁盘加载并缓存），然后再以一定频率刷新到磁盘，从而减少磁盘IO，加快处理速度
+  缓冲池以Page页为单位，底层采用**链表**数据结构管理Page
+  * free page：空闲page，未被使用
+  * clean page：被使用page，数据没有被修改过
+  * dirty page：脏页，被使用page，数据被修改过，也中数据与磁盘的数据产生了不一致
+* Change Buffer
+  更改缓冲区（针对于**非唯一二级索引页**），在执行DML语句时，如果这些数据Page没有在Buffer Pool中，不会直接操作磁盘，而会将数据变更存在更改缓冲区 Change Buffer中，在未来数据被读取时，再将数据合并恢复到Buffer Pool中，再将合并后的数据刷新到磁盘中
+* Adaptive Hash Index
+  InnoDB存储引擎会监控对表上各索引页的查询，如果观察到在特定的条件下hash索引可以提升速度，则建立hash索引
+
+* Log Buffer
+  * 用来保存要写入到磁盘中的log日志数据（redo log 、undo log），默认大小为 16MB，日志缓冲区的日志会定期刷新到磁盘中。如果需要更新、插入或删除许多行的事务，增加日志缓冲区的大小可以节省磁盘 I/O
+  * 参数
+    ``innodb_log_buffer_size``：缓冲区大小
+    ``innodb_flush_log_at_trx_commit``
+
+##### 磁盘结构
+
+![alt text](https://pic.imgdb.cn/item/65e6d4869f345e8d03f472f4.jpg)
+
+* System Tablespace
+  **更改缓冲区**的存储区域。如果表是在系统表空间而不是每个表文件或通用表空间中创建的，它也可能包含表和索引数据。(在MySQL5.x版本中还包含InnoDB数据字典、undolog等)
+* File-Per-Table Tablespaces
+  如果开启了innodb_file_per_table开关，则每个表的文件表空间包含单个InnoDB表的**数据和索引**，并存储在文件系统上的单个数据文件中
+* General Tablespaces
+  * 创建表空间
+  ``CREATE TABLESPACE ts_name ADD DATAFILE 'file_name' ENGINE = engine_name;``
+  * 创建时指定表空间
+  ``CREATE TABLE xxx ... TABLESPACE ts_name;``
+* Undo Tablespaces
+  **撤销**表空间，MySQL实例在初始化时会自动创建两个默认的undo表空间（初始大小16M），用于存储undo log日志
+* Temporary Tablespaces
+  存储用户创建的**临时表**等数据
+* Doublewrite Buffer Files
+  双写缓冲区，innoDB引擎将数据页从Buffer Pool刷新到磁盘前，先将数据页写入**双写缓冲区**文件中，便于系统异常时恢复数据
+* Redo Log
+  用来实现事务的**永久性**，该日志文件由两部分组成：重做日志缓冲（redo log buffer）以及重做日志文件（redo log）,前者是在内存中，后者在磁盘中。当事务提交之后会把所有修改信息都会存到该日志中, 用于在刷新脏页到磁盘时,发生错误时, 进行数据恢复使用
+
+##### 后台线程
+
+**作用**：将缓存区的数据在合适的时机刷新到磁盘文件中
+![alt text](https://pic.imgdb.cn/item/65e6d7299f345e8d03fa665b.jpg)
+
+分类：
+
+* Master Thread
+  核心后台线程，负责调度其他线程，还负责将缓冲池中的数据异步刷新到磁盘中, 保持数据的一致性，还包括脏页的刷新、合并插入缓存、undo页的回收
+* IO Thread
+  InnoDB存储引擎中大量使用了AIO来处理IO请求, 这样可以极大地提高数据库的性能，IO Thread主要负责这些IO请求的回调
+  ![alt text](https://pic.imgdb.cn/item/65e6d7f49f345e8d03fc3a61.jpg)
+* Purge Thread
+  用于回收事务已经提交了的undo log，在事务提交之后，undo log可能不用了，就用它来回收
+* Page Cleaner Thread
+  协助 Master Thread 刷新脏页到磁盘的线程，减轻 Master Thread 的工作压力，减少阻塞
+
 #### 事务原理
+
+![alt text](https://pic.imgdb.cn/item/65e6d9ae9f345e8d03005377.jpg)
+
+* redo log
+  重做日志，记录的是事务提交时数据页的物理修改，是用来实现事务的持久性
+
+* undo log
 
 #### MVCC
 
 ### MySQL管理
 
+#### 系统数据库
+
+自带四大数据库
+![alt text](https://pic.imgdb.cn/item/65e6dc7f9f345e8d0306a008.jpg)
+
+#### 常用工具
+
+##### mysql-客户端工具
+
+```sql
+语法 ：
+mysql [options] [database]
+选项 ：
+-u, --user=name #指定用户名
+-p, --password[=name] #指定密码
+-h, --host=name #指定服务器IP或域名
+-P, --port=port #指定连接端口
+-e, --execute=name #执行SQL语句并退出
+```
+
+``-e``可以直接在mysql客户端执行sql语句，无需连接到数据库再执行
+
+##### mysqladmin-管理工具
+
+执行管理操作，检查服务器的配置和当前状态、创建并删除数据库等
+
+```sql
+语法:
+mysqladmin [options] command ...
+选项:
+-u, --user=name #指定用户名
+-p, --password[=name] #指定密码
+-h, --host=name #指定服务器IP或域名
+-P, --port=port #指定连接端口
+```
+
+##### mysqlbinlog-二进制日志查看工具
+
+检查二进制日志文件的文本格式
+
+```sql
+语法 ：
+mysqlbinlog [options] log-files1 log-files2 ...
+选项 ：
+-d, --database=name 指定数据库名称，只列出指定的数据库相关操作。
+-o, --offset=# 忽略掉日志中的前n行命令。
+-r,--result-file=name 将输出的文本格式日志输出到指定文件。
+-s, --short-form 显示简单格式， 省略掉一些信息。
+--start-datatime=date1 --stop-datetime=date2 指定日期间隔内的所有日志。
+--start-position=pos1 --stop-position=pos2 指定位置间隔内的所有日志。
+```
+
+##### mysqlshow-查看数据库/表/字段统计信息
+
+客户端对象查找工具，用来快速查找存在哪些数据库、数据库中的表、表中的列或者索引
+
+```sql
+语法 ：
+mysqlshow [options] [db_name [table_name [col_name]]]
+选项 ：
+--count 显示数据库及表的统计信息（数据库，表 均可以不指定）
+-i 显示指定数据库或者指定表的状态信息
+示例：
+#查询test库中每个表中的字段书，及行数
+mysqlshow -uroot -p2143 test --count
+#查询test库中book表的详细情况
+mysqlshow -uroot -p2143 test book --count
+```
+
+##### mysqldump-数据备份工具
+
+来备份数据库或在不同数据库之间进行数据迁移,备份内容包含创建表，及插入表的SQL语句
+
+```sql
+语法 ：
+mysqldump [options] db_name [tables]
+mysqldump [options] --database/-B db1 [db2 db3...]
+mysqldump [options] --all-databases/-A
+连接选项 ：
+-u, --user=name 指定用户名
+-p, --password[=name] 指定密码
+-h, --host=name 指定服务器ip或域名
+-P, --port=# 指定连接端口
+输出选项：
+--add-drop-database 在每个数据库创建语句前加上 drop database 语句
+--add-drop-table 在每个表创建语句前加上 drop table 语句 , 默认开启 ; 不
+开启 (--skip-add-drop-table)
+-n, --no-create-db 不包含数据库的创建语句
+-t, --no-create-info 不包含数据表的创建语句
+-d --no-data 不包含数据
+-T, --tab=name 自动生成两个文件：一个.sql文件，创建表结构的语句；一
+个.txt文件，数据文件
+```
+
+##### mysqlimport/source-数据导入工具
+
+客户端数据导入工具
+
+* mysqlimport--导入mysqldump 加 -T 参数后导出的文本文件
+  ``mysqlimport [options] db_name textfile1 [textfile2...]``
+* source--导入sql文件
+  ``source /root/xxxxx.sql``

@@ -723,10 +723,37 @@ InnoDB不支持hash索引，但有自适应功能，指定条件下根据B+索�
 
 * redo log
   重做日志，记录的是事务提交时数据页的物理修改，是用来实现事务的持久性
+  * 件由两部分组成：重做日志缓冲（redo log buffer）以及重做日志文件（redo log file）,前者是在内存中，后者在磁盘中。当事务提交之后会把所有修改信息都存到该日志文件中, 用于在刷新脏页到磁盘,发生错误时进行数据恢复使用
+  * ![alt text](https://pic.imgdb.cn/item/65e737bb9f345e8d032a3f2a.jpg)
 
 * undo log
+  回滚日志，用于记录数据被修改前的信息,提供回滚(保证事务的原子性)和MVCC(多版本并发控制),是逻辑日志
+  * 销毁：undo log在事务执行时产生，事务提交时，并不会立即删除undo log，因为这些日志可能还用于MVCC
+  * 存储：undo log采用段的方式进行管理和记录，存放在前面介绍的 rollback segment回滚段中，内部包含1024个undo log segment
 
 #### MVCC
+
+##### 基本概念
+
+* 当前读：
+  读取的是记录的最新版本，读取时还要保证其他并发事务不能修改当前记录，会对读取的记录进行加锁。
+  ``select ... lock in share mode(共享锁)`` ``select ...for update、update、insert、delete(排他锁)``都是一种当前读
+* 快照读：
+  简单的select（不加锁）就是快照读，读取的是记录数据的可见版本，有可能是历史数据(保证可重复读)，不加锁，是非阻塞读
+  * ``Read Committed``：每次select，都生成一个快照读
+  * ``Repeatable Read``：开启事务后第一个select语句才是快照读的地方
+  * ``Serializable``：快照读会退化为当前读
+* MVCC
+  多版本并发控制
+  指维护一个数据的多个版本，使得读写操作没有冲突，快照读为MySQL实现MVCC提供了一个非阻塞读功能
+
+##### 隐藏字段
+
+##### undolog版本链
+
+##### readview
+
+##### 原理
 
 ### MySQL管理
 

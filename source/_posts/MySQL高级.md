@@ -3,7 +3,7 @@ title: MySQL高级
 date: 2024-3-1
 tags:
   - java
-description: MySQL索引、SQL优化、存储、视图、锁、引擎等
+description: MySQL存储引擎、索引、SQL优化、视图/存储过程/触发器、锁、InnoDB引擎、MySQL管理等
 abbrlink: 10006
 categories: 
   - Learn
@@ -165,9 +165,9 @@ InnoDB不支持hash索引，但有自适应功能，指定条件下根据B+索�
 
 #### 索引设计原则
 
-* ![alt text](https://pic.imgdb.cn/item/65e321d79f345e8d03c9457e.jpg)
-* ![alt text](https://pic.imgdb.cn/item/65e322199f345e8d03ca4c62.jpg)
-* ![alt text](https://pic.imgdb.cn/item/65e3223c9f345e8d03cad74d.jpg)
+![alt text](https://pic.imgdb.cn/item/65e321d79f345e8d03c9457e.jpg)
+![alt text](https://pic.imgdb.cn/item/65e322199f345e8d03ca4c62.jpg)
+![alt text](https://pic.imgdb.cn/item/65e3223c9f345e8d03cad74d.jpg)
 
 ### SQL优化
 
@@ -620,7 +620,7 @@ InnoDB不支持hash索引，但有自适应功能，指定条件下根据B+索�
   ![alt text](https://pic.imgdb.cn/item/65e5d3339f345e8d03ee27b8.jpg)
 * 默认情况下，InnoDB在 REPEATABLE READ事务隔离级别运行，InnoDB使用 next-key 锁进行搜索和索引扫描，以防止幻读
   * 针对**唯一索引**进行检索时，对已存在的记录进行等值匹配时，将会**自动优化为行锁**
-  * InnoDB的行锁是**针对于索引**加的锁，不通过索引条件检索数据，那么InnoDB将对表中的所有记录加锁，此时就会升级为表锁
+  * InnoDB的行锁是**针对于索引**加的锁，不通过索引条件检索数据，那InnoDB将对表中的所有记录加锁，此时就会升级为表锁
   * ``select object_schema,object_name,index_name,lock_type,lock_mode,lock_data from performance_schema.data_locks;``
   
 ##### 间隙锁&临键锁

@@ -722,13 +722,13 @@ InnoDB不支持hash索引，但有自适应功能，指定条件下根据B+索�
 ![alt text](https://pic.imgdb.cn/item/65e6d9ae9f345e8d03005377.jpg)
 
 * redo log
-  重做日志，记录的是事务提交时数据页的物理修改，是用来实现事务的持久性
+  **重做日志**，记录的是事务提交时数据页的物理修改，是用来实现事务的持久性
   * 件由两部分组成：重做日志缓冲（redo log buffer）以及重做日志文件（redo log file）,前者是在内存中，后者在磁盘中。当事务提交之后会把所有修改信息都存到该日志文件中, 用于在刷新脏页到磁盘,发生错误时进行数据恢复使用
   * ![alt text](https://pic.imgdb.cn/item/65e737bb9f345e8d032a3f2a.jpg)
 
 * undo log
-  回滚日志，用于记录数据被修改前的信息,提供回滚(保证事务的原子性)和MVCC(多版本并发控制),是逻辑日志
-  * 销毁：undo log在事务执行时产生，事务提交时，并不会立即删除undo log，因为这些日志可能还用于MVCC
+  **回滚日志**，用于记录数据被修改前的信息,提供**回滚**(保证事务的原子性)和**MVCC**(多版本并发控制),是**逻辑日志**
+  * 销毁：undo log在事务执行时产生，事务提交时，并不会立即删除undo log，因为这些日志可能还**用于MVCC**
   * 存储：undo log采用段的方式进行管理和记录，存放在前面介绍的 rollback segment回滚段中，内部包含1024个undo log segment
 
 #### MVCC
@@ -739,7 +739,7 @@ InnoDB不支持hash索引，但有自适应功能，指定条件下根据B+索�
   读取的是记录的最新版本，读取时还要保证其他并发事务不能修改当前记录，会对读取的记录进行加锁。
   ``select ... lock in share mode(共享锁)`` ``select ...for update、update、insert、delete(排他锁)``都是一种当前读
 * 快照读：
-  简单的select（不加锁）就是快照读，读取的是记录数据的可见版本，有可能是历史数据(保证可重复读)，不加锁，是非阻塞读
+  简单的select（不加锁）就是快照读，读取的是记录数据的可见版本，有可能是历史数据(保证**可重复读**)，不加锁，是非阻塞读
   * ``Read Committed``：每次select，都生成一个快照读
   * ``Repeatable Read``：开启事务后第一个select语句才是快照读的地方
   * ``Serializable``：快照读会退化为当前读
@@ -749,11 +749,38 @@ InnoDB不支持hash索引，但有自适应功能，指定条件下根据B+索�
 
 ##### 隐藏字段
 
-##### undolog版本链
+三个隐藏字段
+![alt text](https://pic.imgdb.cn/item/65e7cfd49f345e8d0337f257.jpg)
+
+##### undo log
+
+* undo log
+  回滚日志
+* 版本链
+  * 不同事务或相同事务对同一条记录进行修改，会导致该记录的undo log生成一条记录版本链表，链表的头部是最新的旧记录，链表尾部是最早的旧记录
+  * ![alt text](https://pic.imgdb.cn/item/65e7f1459f345e8d039b0375.jpg)
 
 ##### readview
 
+快照读 SQL执行时MVCC提取数据的依据，记录并维护系统当前活跃的事务（未提交的）id
+
+* 核心字段
+  ![alt text](https://pic.imgdb.cn/item/65e7f8e39f345e8d03b441e4.jpg)
+* 版本链数据访问规则
+  ![alt text](https://pic.imgdb.cn/item/65e7fb109f345e8d03bb5d3b.jpg)
+* 不同隔离级别生成readview时机不同
+  * ``READ COMMITTED``:在事务中每一次执行快照读时生成ReadView
+  * ``REPEATABLE READ``:仅在事务中第一次执行快照读时生成ReadView，后续复用该ReadView
+
 ##### 原理
+
+* RC
+  ![alt text](https://pic.imgdb.cn/item/65e7fec99f345e8d03c64c41.jpg)
+* RR
+  ![alt text](https://pic.imgdb.cn/item/65e800a29f345e8d03cbd099.jpg)
+  复用第一次快照读readview--实现**可重复读**
+* 总体原理
+  ![alt text](https://pic.imgdb.cn/item/65e801529f345e8d03cdc110.jpg)
 
 ### MySQL管理
 

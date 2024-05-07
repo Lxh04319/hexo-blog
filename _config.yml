@@ -7,13 +7,13 @@ title: star⭐
 subtitle: It's a rewarding trip.
 description: 不虚此行
 keywords:
-author: lxh11111
+author: Lxh04319
 language: zh-CN
 timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: https://lxh11111.github.io
+url: https://Lxh04319.github.io
 permalink: posts/:abbrlink.html
 abbrlink:
     alg: crc32
@@ -142,5 +142,5 @@ search:
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: git@github.com:lxh11111/lxh11111.github.io.git
+  repo: git@github.com:Lxh04319/Lxh04319.github.io.git
   branch: main
